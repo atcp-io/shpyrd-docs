@@ -42,7 +42,7 @@ Learn how to install Shpyrd and deploy your first application in less than 30 mi
 
 ### Prototype
 
-<div style="position: relative; padding-bottom: 64.98194945848375%; height: 0;"><iframe src="https://www.loom.com/embed/c36cff00405d45d887fdde7a74a8b2cc?sid=8f5ce8fd-1d81-41c6-bf6d-07235f5e5589" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+[Video](https://www.loom.com/embed/c36cff00405d45d887fdde7a74a8b2cc?sid=8f5ce8fd-1d81-41c6-bf6d-07235f5e5589) 
 
 ---
 
