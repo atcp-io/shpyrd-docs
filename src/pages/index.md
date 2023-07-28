@@ -66,8 +66,6 @@ We are pleased to have you in our community, contributing and benefiting from ou
 
 ### Submit an issue
 
-https://github.com/atcp-io/shpyrd/issues
-
 Should you encounter any issues, we want to inform you that we use GitHub Issues as our main platform for tracking bugs, improvements, and feature requests. This collaborative and transparent approach allows us to improve our project swiftly and more effectively.
 
 To submit an issue, kindly visit our [GitHub Issues](https://github.com/atcp-io/shpyrd/issues)
