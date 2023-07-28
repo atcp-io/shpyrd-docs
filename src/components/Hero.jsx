@@ -56,8 +56,8 @@ export function Hero() {
                 Manage the entire application stack from one place, from deploy to monitoring.
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
-                <Button href="/">Get started</Button>
-                <Button href="/" variant="secondary">
+                <Button href="/#basic-usage">Get started</Button>
+                <Button href="https://github.com/atcp-io/shpyrd" variant="secondary">
                   View on GitHub
                 </Button>
               </div>
