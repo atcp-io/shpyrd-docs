@@ -20,42 +20,29 @@ export const navigation = [
     ],
   },
   {
-    title: 'Core concepts',
+    title: 'Topic One',
     links: [
-      { title: 'Understanding caching', href: '/docs/understanding-caching' },
       {
-        title: 'Predicting user behavior',
-        href: '/docs/predicting-user-behavior',
+        title: 'Section One',
+        href: '/docs/section-one',
       },
-      { title: 'Basics of time-travel', href: '/docs/basics-of-time-travel' },
       {
-        title: 'Introduction to string theory',
-        href: '/docs/introduction-to-string-theory',
-      },
-      { title: 'The butterfly effect', href: '/docs/the-butterfly-effect' },
+        title: 'Section Two',
+        href: '/docs/section-two',
+      }
     ],
   },
   {
-    title: 'Advanced guides',
+    title: 'Topic Two',
     links: [
-      { title: 'Writing plugins', href: '/docs/writing-plugins' },
-      { title: 'Neuralink integration', href: '/docs/neuralink-integration' },
-      { title: 'Temporal paradoxes', href: '/docs/temporal-paradoxes' },
-      { title: 'Testing', href: '/docs/testing' },
-      { title: 'Compile-time caching', href: '/docs/compile-time-caching' },
       {
-        title: 'Predictive data generation',
-        href: '/docs/predictive-data-generation',
+        title: 'Section Three',
+        href: '/docs/section-three',
       },
-    ],
-  },
-  {
-    title: 'API reference',
-    links: [
-      { title: 'CacheAdvance.predict()', href: '/docs/cacheadvance-predict' },
-      { title: 'CacheAdvance.flush()', href: '/docs/cacheadvance-flush' },
-      { title: 'CacheAdvance.revert()', href: '/docs/cacheadvance-revert' },
-      { title: 'CacheAdvance.regret()', href: '/docs/cacheadvance-regret' },
+      {
+        title: 'Section Four',
+        href: '/docs/section-four',
+      }
     ],
   },
   {

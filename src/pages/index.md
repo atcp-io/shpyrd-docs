@@ -12,10 +12,6 @@ Learn how to install Shpyrd and deploy your first application in less than 30 mi
 
 {% quick-link title="Architecture guide" icon="presets" href="/" description="Learn how the internals work and contribute." /%}
 
-{% quick-link title="Plugins" icon="plugins" href="/" description="Extend the library with third-party plugins or write your own." /%}
-
-{% quick-link title="API reference" icon="theming" href="/" description="Learn to easily customize and modify your app's visual design to fit your brand." /%}
-
 {% /quick-links %}
 
 ---
@@ -42,7 +38,7 @@ Learn how to install Shpyrd and deploy your first application in less than 30 mi
 
 ### Prototype
 
-[Video](https://www.loom.com/embed/c36cff00405d45d887fdde7a74a8b2cc?sid=8f5ce8fd-1d81-41c6-bf6d-07235f5e5589) 
+{% loom src="https://www.loom.com/embed/c36cff00405d45d887fdde7a74a8b2cc?sid=8f5ce8fd-1d81-41c6-bf6d-07235f5e5589" /%}
 
 ---
 
