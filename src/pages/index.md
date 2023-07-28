@@ -1,7 +1,7 @@
 ---
 title: Getting started
 pageTitle: Shpyrd - Make infrastructure easy again.
-description: Cache every single thing your app could ever do ahead of time, so your code never even has to run at all.
+description: Opensource Enterprise Kubernetes Management. Simple application deploy and monitoring.
 ---
 
 Learn how to install Shpyrd and deploy your first application in less than 30 minutes. {% .lead %}
