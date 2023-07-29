@@ -1,71 +1,36 @@
 ---
 title: How to contribute
-description: Quidem magni aut exercitationem maxime rerum eos.
+description: Our guide on how you can help our project.
 ---
 
-Quasi sapiente voluptates aut minima non doloribus similique quisquam. In quo expedita ipsum nostrum corrupti incidunt. Et aut eligendi ea perferendis.
-
----
-
-## Quis vel iste dicta
-
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur.
-
-### Et pariatur ab quas
-
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur quaerat exercitationem. Consequatur et cum atque mollitia qui quia necessitatibus.
-
-```js
-/** @type {import('@tailwindlabs/lorem').ipsum} */
-export default {
-  lorem: 'ipsum',
-  dolor: ['sit', 'amet', 'consectetur'],
-  adipiscing: {
-    elit: true,
-  },
-}
-```
-
-Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste. Provident nam asperiores vel laboriosam omnis ducimus enim nesciunt quaerat. Minus tempora cupiditate est quod.
-
-### Natus aspernatur iste
-
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur quaerat exercitationem. Consequatur et cum atque mollitia qui quia necessitatibus.
-
-Voluptas beatae omnis omnis voluptas. Cum architecto ab sit ad eaque quas quia distinctio. Molestiae aperiam qui quis deleniti soluta quia qui. Dolores nostrum blanditiis libero optio id. Mollitia ad et asperiores quas saepe alias.
+Welcome to the Shpyrd project! We're excited that you want to get involved and contribute to our community. Below are several ways you can participate and make a positive impact on Shpyrd:
 
 ---
 
-## Quos porro ut molestiae
+## Engage with the Community
 
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur.
+Our community actively connects on Discord. Join our Discord server to interact with other contributors and users. Here, you can ask questions, share ideas, and discuss potential improvements or changes to Shpyrd. To maintain a friendly and inclusive environment, please abide by our code of conduct during all interactions.
 
-### Voluptatem quas possimus
+Make sure to take some time to read the architecture overview of Shpyrd. Understanding the design and structure will help you contribute effectively and align your efforts with the project's objectives.
 
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur quaerat exercitationem. Consequatur et cum atque mollitia qui quia necessitatibus.
+## Issue Hunting
 
-Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste. Provident nam asperiores vel laboriosam omnis ducimus enim nesciunt quaerat. Minus tempora cupiditate est quod.
+One of the most valuable contributions you can make is finding and addressing existing issues. Check out our GitHub issue tracker to discover problems, bugs, or feature requests that require attention. Feel free to seek clarification or additional information on any issue that catches your interest.
 
-### Id vitae minima
+If you decide to work on a particular issue, ensure you are assigned to it or indicate your intention to prevent duplicate efforts. Once you have a solution, submit a pull request to share your proposed changes with the community for review.
 
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur quaerat exercitationem. Consequatur et cum atque mollitia qui quia necessitatibus.
+## Propose New Features
 
-Voluptas beatae omnis omnis voluptas. Cum architecto ab sit ad eaque quas quia distinctio. Molestiae aperiam qui quis deleniti soluta quia qui. Dolores nostrum blanditiis libero optio id. Mollitia ad et asperiores quas saepe alias.
+We love hearing fresh ideas for Shpyrd! If you have exciting proposals for new features that could enhance the project, we'd like to know. Start by creating a new GitHub issue that describes the feature in detail. Engage with the community on Discord to gather feedback and refine your concept.
+
+Remember, collaboration with the community and project maintainers will help shape the proposal and ensure its successful implementation.
+
+## Support through Donations
+
+Maintaining and developing Shpyrd requires both time and resources. If you find Shpyrd valuable and wish to contribute beyond code, consider supporting us through donations. Donations help cover support community events, and encourage further development.
+
+Your contribution, regardless of its size, will be highly appreciated and will go a long way in supporting the sustainability of Shpyrd.
 
 ---
 
-## Vitae laborum maiores
-
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur.
-
-### Corporis exercitationem
-
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur quaerat exercitationem. Consequatur et cum atque mollitia qui quia necessitatibus.
-
-Possimus saepe veritatis sint nobis et quam eos. Architecto consequatur odit perferendis fuga eveniet possimus rerum cumque. Ea deleniti voluptatum deserunt voluptatibus ut non iste. Provident nam asperiores vel laboriosam omnis ducimus enim nesciunt quaerat. Minus tempora cupiditate est quod.
-
-### Reprehenderit magni
-
-Sit commodi iste iure molestias qui amet voluptatem sed quaerat. Nostrum aut pariatur. Sint ipsa praesentium dolor error cumque velit tenetur quaerat exercitationem. Consequatur et cum atque mollitia qui quia necessitatibus.
-
-Voluptas beatae omnis omnis voluptas. Cum architecto ab sit ad eaque quas quia distinctio. Molestiae aperiam qui quis deleniti soluta quia qui. Dolores nostrum blanditiis libero optio id. Mollitia ad et asperiores quas saepe alias.
+Thank you for your interest in contributing to the Shpyrd project. We value the participation of every community member, and your contributions play a crucial role in making Shpyrd a success. Whether you're actively coding, discussing ideas, or supporting us through donations, your efforts are highly valued and impactful. Together, let's create something remarkable with Shpyrd!
