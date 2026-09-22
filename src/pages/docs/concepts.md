@@ -7,7 +7,7 @@ Shpyrd borrows the vocabulary of Heroku and Fly and maps it onto Kubernetes obje
 
 ## Project and resources
 
-A project is what you deploy to: a name, a domain, config vars and a set of **resources**. Today the one resource type is the **app** (your code with its process types); databases, caches and volumes follow as further resource types (see the [roadmap](/docs/roadmap)). A project without a web process is a worker or an agent; no separate type is needed. Under the hood the app is an `App` custom resource (`shpyrd.io/v1alpha1`) in the project's namespace, `app-<name>`, together with everything the controller creates for it. `kubectl get apps -A` lists them all.
+A project is what you deploy to: a name, a domain, config vars and a set of **resources**. Resource types today are the **app** (your code with its process types) and **volumes** (persistent disks); databases and caches follow (see [Resources](/docs/resources) and the [roadmap](/docs/roadmap)). A project without a web process is a worker or an agent; no separate type is needed. Under the hood the project is a namespace, `app-<name>` (label `shpyrd.io/project`), holding an `App` custom resource (`shpyrd.io/v1alpha1`), the `Volume` resources and everything the controller creates for them. `kubectl get apps,volumes.shpyrd.io -A` lists them all; `shpyrd projects info` and the dashboard's Resources card show the same list with status and what uses each resource.
 
 ```yaml
 apiVersion: shpyrd.io/v1alpha1
@@ -40,7 +40,7 @@ Instances are named the way Heroku names dynos: `web.1`, `web.2`, `worker.1`, in
 
 ## Builds
 
-A **build** compiles source into an OCI image with [Cloud Native Buildpacks](https://buildpacks.io) (Paketo), run inside the cluster by [kpack](https://github.com/buildpacks-community/kpack). A build happens for every new source: an uploaded archive, or a new commit on a Git branch (kpack polls). Builds are numbered (`#1`, `#2`, ...) and identified by the image digest; the dashboard shows every step (prepare, analyze, detect, restore, build, export) live.
+A **build** compiles source into an OCI image inside the cluster, with one of two strategies: [Cloud Native Buildpacks](https://buildpacks.io) (Paketo, run by [kpack](https://github.com/buildpacks-community/kpack)), or the repository's `Dockerfile` built by a rootless [BuildKit](https://github.com/moby/buildkit) Job. A build happens for every new source: an uploaded archive, or a new commit on a Git branch (kpack polls; Dockerfile builds from Git rebuild when the revision changes). Builds are numbered (`#1`, `#2`, ...) and identified by the image digest; the dashboard shows every step live (prepare, analyze, detect, restore, build, export for buildpacks; fetch and build for Dockerfiles).
 
 Buildpacks detect the language from the repository (`go.mod`, `package.json`, `pom.xml`, `requirements.txt`, `Gemfile`, `*.csproj`, or static files) and produce one process type per entry point. A `Procfile` or buildpack-specific settings (`BP_*` variables in `build.env`) refine that, for example `BP_GO_TARGETS` to build several Go commands.
 
@@ -54,7 +54,7 @@ A **release** is a build plus the config vars in effect, numbered `v1`, `v2`, ..
 | config | `Set GREETING config var`, `Resize web to shared-m` | no, reuses the current build |
 | rollback | `Rollback to v7` | no, reuses v7's build |
 
-Each release records its build, its config snapshot (a Secret `<app>-release-vN`), its process types and their sizes. **Rollback** re-releases an earlier release exactly: its build is pinned and its config vars are restored. Rolling back to a release whose build predates a process type (say, before `worker` existed) cannot start that process; the dashboard warns before and the failure is reported plainly after.
+Each release records its build, its config snapshot (a Secret `<app>-release-vN`), its process types and their sizes, and the resources attached to the app. **Rollback** re-releases an earlier release exactly: its build is pinned and its config vars, sizes and attachments are restored. Rolling back to a release whose build predates a process type (say, before `worker` existed) cannot start that process; the dashboard warns before and the failure is reported plainly after.
 
 The next `shpyrd deploy` unpins the build and continues from the new source.
 
@@ -62,7 +62,7 @@ The next `shpyrd deploy` unpins the build and continues from the new source.
 
 Config vars are environment variables for every process, stored in Secret `<app>-env`. They are **write-only** in the product: `shpyrd secrets set/unset/list` and the dashboard show names and when each was last changed, never values. Changing them creates a `config` release and rolls the processes.
 
-`PORT` is injected for processes with a port; plain, non-secret variables can also be declared in the App spec (`env`).
+`PORT` is injected for processes with a port; plain, non-secret variables can also be declared in the App spec (`env`). Resources attached to the app add their own variables (`DATABASE_URL`, ...), shown read-only with the resource that provides them; they win over a config var of the same name.
 
 ## Domains and TLS
 

@@ -22,13 +22,13 @@ The **Projects** page lists every project with its phase, current release, per-p
 
 A project page has:
 
-- **Header**: phase, process chips (green when all instances are on the current release and ready, amber while rolling out, red with a count when instances are failing), the URL, and the **Open**, **Deploy** (from Git) and **Destroy** actions.
+- **Header**: phase, process chips (green when all instances are on the current release and ready, amber while rolling out, red with a count when instances are failing), the URL, and the **Open**, **Deploy** (from Git, with buildpacks or a Dockerfile) and **Destroy** actions (the dialog lists every resource that goes, data-holding ones first).
 - **Activity panel**, only when something is happening: live build output while building; per-process rollout progress ("1/3 on new release · 3 serving") while deploying; the container's reason and a one-click rollback when a release is not healthy.
-- **Overview**: source, current release and build, per-process instances with scale buttons and an instance size selector, and the **Releases** table (kind badge, what changed, build number, rollback button).
+- **Overview**: source and build strategy, current release and build, per-process instances with scale buttons and an instance size selector (pinned to one for processes mounting a single-instance volume), the **Resources** card (the app, its volumes and later databases, with status and what uses them; create, resize and delete volumes there) and the **Releases** table (kind badge, what changed, build number, rollback button).
 - **Metrics**: see below.
 - **Logs**: every instance streamed live, named `web.1`, `worker.2`; filter box, pause/live, error and warning highlighting.
-- **Builds**: build history with status, reason, source and duration; select one to read its full output (live while building), and which releases use it.
-- **Config**: config var names and last-updated times; add, replace (blind), remove, or paste a `.env`. Values are never shown.
+- **Builds**: build history with status, strategy, reason, source and duration; select one to read its full output (live while building), and which releases use it.
+- **Config**: config var names and last-updated times; add, replace (blind), remove, or paste a `.env`. Variables provided by attached resources are listed read-only with their provider. Values are never shown.
 
 Actions that would start another release (Deploy, Rollback) are disabled while one is building or rolling out.
 

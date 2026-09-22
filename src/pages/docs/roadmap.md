@@ -11,17 +11,27 @@ Shpyrd is pre-alpha. The MVP described in [RFC-0001](https://github.com/atcp-io/
 - `App` controller: buildpack builds from archives or Git, sized processes, URLs with TLS, releases with config snapshots, config-restoring rollbacks, failure detection.
 - CLI: cluster lifecycle, projects, deploy, config vars, scale, logs, releases, rollback.
 - Dashboard: projects, activity, metrics per process, streamed logs, builds, write-only config vars, cluster capacity, token authentication, light/dark themes.
+- Instance sizes: a cluster-wide catalog of shared and dedicated sizes, `shpyrd resize`, sizes in releases.
+
+## Done (phase B)
+
+Designed in [RFC-0003](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0003-projects-and-resources.md), [0004](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0004-dockerfile-builds.md), [0005](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0005-shell-and-one-off-commands.md) and [0006](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0006-persistent-volumes.md):
+
+- **Dockerfile builds** with rootless BuildKit Jobs next to buildpacks, auto-detected, with build args, targets and a layer cache.
+- **Shell and one-off commands**: `shpyrd shell` into running instances, `shpyrd run` for migrations and scripts.
+- **Persistent volumes**: single-instance (block) and shared volumes mounted from `shpyrd.yaml`, with the access-mode rules enforced.
+- **Projects with several resources**: one resource list per project in the CLI, API and dashboard, and the binding plumbing that turns an attached resource into config vars.
 
 ## Next
 
-The next phases are designed in [RFC-0002](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0002-extensions-and-security.md): extensions, projects with several resources (Postgres, Redis/Valkey, volumes) bound to apps through config vars, Dockerfile builds with BuildKit, shell access, authentication (local users, email/password, Okta via OIDC), teams and roles mirrored into Kubernetes RBAC, and production hardening (network policies, quotas, audit log).
+The remaining phases are designed in the [RFC index](https://github.com/atcp-io/shpyrd/blob/main/rfcs/README.md): the extension model (RFC-0002), authentication (RFC-0007: local users, email/password, Okta via OIDC), teams and roles mirrored into Kubernetes RBAC with production hardening (RFC-0008), and Postgres and Redis resources (RFC-0009, RFC-0010).
 
-- **Instance sizes** (done): a cluster-wide catalog of shared and dedicated sizes, `shpyrd resize`, sizes in releases.
+- **Extensions and authentication** (phase C). In-tree extensions with their own components, resource types and CLI commands; the server as an OIDC relying party with local users through Dex.
+- **Teams, roles and security** (phase D). Project membership, roles mirrored into Kubernetes RBAC, network policies, quotas, audit log; Okta and email/password.
+- **Postgres and Redis** (phase E). CloudNativePG and Valkey resources attached to apps as config vars (`shpyrd attach db`), plus shared storage for volumes.
 - **Published binaries and images.** Release builds of the CLI (Homebrew, curl installer) and `ghcr.io/atcp-io/shpyrd-server` so `make cli` is no longer required.
 - **AWS profile.** EKS with the AWS Load Balancer Controller, ExternalDNS/Route53, ACM (or Let's Encrypt) and ECR, reusing the modules proven in the 2023 proofs of concept.
-- **Dockerfile builds.** BuildKit jobs for repositories that have a Dockerfile, next to buildpacks (buildpacks and kpack cannot build application Dockerfiles).
 - **Log aggregation.** Loki and Alloy so logs survive restarts and can be searched over time.
-- **Resources.** Managed Postgres (CloudNativePG), Redis/Valkey and persistent volumes attachable to an app as config vars, Heroku-style.
 - **Autoscaling and cost.** HPA/KEDA per process type; per-project cost from resource requests.
 - **Users and access.** Local users, email/password and OIDC (Okta, GitHub) through one relying-party implementation; teams and roles per project, mirrored into Kubernetes RBAC.
 - **GitOps export as a first-class flow.** Keep `cluster export` in step with Flux and Argo CD conventions.
