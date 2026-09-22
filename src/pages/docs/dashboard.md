@@ -24,7 +24,7 @@ A project page has:
 
 - **Header**: phase, process chips (green when all instances are on the current release and ready, amber while rolling out, red with a count when instances are failing), the URL, and the **Open**, **Deploy** (from Git) and **Destroy** actions.
 - **Activity panel**, only when something is happening: live build output while building; per-process rollout progress ("1/3 on new release · 3 serving") while deploying; the container's reason and a one-click rollback when a release is not healthy.
-- **Overview**: source, current release and build, per-process instances and size with scale buttons, and the **Releases** table (kind badge, what changed, build number, rollback button).
+- **Overview**: source, current release and build, per-process instances with scale buttons and an instance size selector, and the **Releases** table (kind badge, what changed, build number, rollback button).
 - **Metrics**: see below.
 - **Logs**: every instance streamed live, named `web.1`, `worker.2`; filter box, pause/live, error and warning highlighting.
 - **Builds**: build history with status, reason, source and duration; select one to read its full output (live while building), and which releases use it.
@@ -45,13 +45,13 @@ Modelled on what Heroku, Fly and Render show for an application:
 | Memory | working set as a percentage of each process' allocation |
 | Network | pod traffic in and out |
 
-Orange dashed lines mark releases; a red line marks 100%. Ranges: last hour, 6 hours, 24 hours, 7 days. Sizes (the 100% marks) are the `cpu`/`memory` of each process in [`shpyrd.yaml`](/docs/shpyrd-yaml), 1 CPU and 512 MiB by default.
+Orange dashed lines mark releases; a red line marks 100%. Ranges: last hour, 6 hours, 24 hours, 7 days. 100% is the process' instance size (its allocation); shared sizes can read above 100% while bursting.
 
 Grafana, linked from the header, has the same data with the pre-provisioned "shpyrd / Web apps" dashboard and everything kube-prometheus-stack ships.
 
 ## Cluster
 
-The **Cluster** page shows the environment profile, version and domain; **capacity**: CPU and memory **used** (what the machines are doing) versus **reserved** (what running processes have requested, which is what limits scheduling), in total and per node, with utilisation over time; the installed components with versions; and the Helm releases in the cluster.
+The **Cluster** page shows the environment profile, version and domain; **capacity**: CPU and memory **used** (what the machines are doing) versus **reserved** (what running processes have requested, which is what limits scheduling), in total and per node, with utilisation over time; the **instance size catalog** (add, change, delete sizes and pick the default); the installed components with versions; and the Helm releases in the cluster.
 
 ## Security notes
 

@@ -3,7 +3,7 @@ title: CLI reference
 description: Every shpyrd command and its flags.
 ---
 
-`shpyrd` uses your kubeconfig (`--kubeconfig`, `--context` on every command; `-v` for verbose output). Project commands take `--app <name>` or read `app:` from `shpyrd.yaml` in the current directory. {% .lead %}
+`shpyrd` uses your kubeconfig (`--kubeconfig`, `--context` on every command; `-v` for verbose output). Project commands take `--project <name>` or read `app:` from `shpyrd.yaml` in the current directory. {% .lead %}
 
 ## Cluster
 
@@ -22,10 +22,10 @@ description: Every shpyrd command and its flags.
 
 | Command | What it does |
 | --- | --- |
-| `shpyrd apps create <name>` | Create the project. `--domain` extra hostnames, `--save` writes `shpyrd.yaml`. |
-| `shpyrd apps list` | Table of projects: phase, release, URL, age. |
-| `shpyrd apps info <name>` | Phase and message, URL, build digest, source, processes (with failing reasons), recent releases. |
-| `shpyrd apps destroy <name>` | Delete the project and its namespace (`--yes`). |
+| `shpyrd projects create <name>` | Create the project. `--domain` extra hostnames, `--save` writes `shpyrd.yaml`. (`shpyrd apps` still works as an alias.) |
+| `shpyrd projects list` | Table of projects: phase, release, URL, age. |
+| `shpyrd projects info <name>` | Phase and message, URL, build digest, source, processes (with sizes and failing reasons), recent releases. |
+| `shpyrd projects destroy <name>` | Delete the project and its namespace (`--yes`). |
 
 ## Deploying and running
 
@@ -33,6 +33,10 @@ description: Every shpyrd command and its flags.
 | --- | --- |
 | `shpyrd deploy` | Archive the committed tree of the current directory, upload, build and release. `--working-tree` deploys the directory as is; `--git <url> --ref <rev> --path <dir>` builds from Git; `--image <ref>` runs a prebuilt image; `--no-wait` returns immediately. Applies `shpyrd.yaml` (processes, sizes, build env, domains). |
 | `shpyrd scale web=N worker=M` | Set instance counts per process type. |
+| `shpyrd resize web=SIZE worker=SIZE` | Set instance sizes per process type (a release). |
+| `shpyrd sizes list` | The cluster's instance size catalog with kind, cpu, burst and memory. |
+| `shpyrd sizes set <name> --kind shared\|dedicated --cpu <cores> --memory <bytes> [--default]` | Add or change a size; processes using it are resized. |
+| `shpyrd sizes delete <name>`, `shpyrd sizes default <name>` | Remove a size (not the default), choose the default. |
 | `shpyrd secrets set K=V ...` | Set config vars (new release, rolling restart). |
 | `shpyrd secrets unset K ...` | Remove config vars. |
 | `shpyrd secrets list` | Names and last-updated times. Values are never printed. |

@@ -10,7 +10,7 @@ import blurIndigoImage from '@/images/blur-indigo.png'
 import shpyrdBackground from '@/images/shpyrd-background.png'
 
 const codeLanguage = 'bash'
-const code = `$ shpyrd apps create hello-world
+const code = `$ shpyrd projects create hello-world
 $ shpyrd deploy
 ==> Archiving HEAD (654f4925638e)
 ==> Building

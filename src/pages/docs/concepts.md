@@ -5,9 +5,9 @@ description: Projects, processes, builds, releases and config vars - the vocabul
 
 Shpyrd borrows the vocabulary of Heroku and Fly and maps it onto Kubernetes objects you can always inspect with `kubectl`. {% .lead %}
 
-## Project (App)
+## Project and resources
 
-A project is one deployable codebase with a name, a source, process types and config vars. It is stored as an `App` custom resource (`shpyrd.io/v1alpha1`) in its own namespace, `app-<name>`, together with everything the controller creates for it. `kubectl get apps -A` lists them all.
+A project is what you deploy to: a name, a domain, config vars and a set of **resources**. Today the one resource type is the **app** (your code with its process types); databases, caches and volumes follow as further resource types (see the [roadmap](/docs/roadmap)). A project without a web process is a worker or an agent; no separate type is needed. Under the hood the app is an `App` custom resource (`shpyrd.io/v1alpha1`) in the project's namespace, `app-<name>`, together with everything the controller creates for it. `kubectl get apps -A` lists them all.
 
 ```yaml
 apiVersion: shpyrd.io/v1alpha1
@@ -34,7 +34,7 @@ Projects without a `web` process (workers, agents, schedulers) work the same way
 
 ## Processes
 
-A **process type** is a way of running the build: `web` serves HTTP and receives `PORT`; anything else (`worker`, `scheduler`, `agent`) runs the command of the same name that the buildpacks recorded in the image. Each process type becomes a Deployment with its own **instance** count (`shpyrd scale web=3 worker=1`) and **size**: by default 1 CPU and 512 MiB (requests 100m / 128 MiB); override per process with `cpu` and `memory` in [`shpyrd.yaml`](/docs/shpyrd-yaml).
+A **process type** is a way of running the build: `web` serves HTTP and receives `PORT`; anything else (`worker`, `scheduler`, `agent`) runs the command of the same name that the buildpacks recorded in the image. Each process type becomes a Deployment with its own **instance** count (`shpyrd scale web=3 worker=1`) and **instance size** (`shpyrd resize web=shared-m`): a named cpu/memory allocation from the cluster catalog, `shared` (burstable CPU share) or `dedicated` (whole cores). The default size is `shared-s` (0.5 CPU, 64 MiB).
 
 Instances are named the way Heroku names dynos: `web.1`, `web.2`, `worker.1`, in creation order. Logs and the dashboard use these names.
 
@@ -51,10 +51,10 @@ A **release** is a build plus the config vars in effect, numbered `v1`, `v2`, ..
 | Kind | Example description | Creates a build? |
 | --- | --- | --- |
 | deploy | `Deploy 654f4925638e` | yes |
-| config | `Set GREETING config var` | no, reuses the current build |
+| config | `Set GREETING config var`, `Resize web to shared-m` | no, reuses the current build |
 | rollback | `Rollback to v7` | no, reuses v7's build |
 
-Each release records its build, its config snapshot (a Secret `<app>-release-vN`) and its process types. **Rollback** re-releases an earlier release exactly: its build is pinned and its config vars are restored. Rolling back to a release whose build predates a process type (say, before `worker` existed) cannot start that process; the dashboard warns before and the failure is reported plainly after.
+Each release records its build, its config snapshot (a Secret `<app>-release-vN`), its process types and their sizes. **Rollback** re-releases an earlier release exactly: its build is pinned and its config vars are restored. Rolling back to a release whose build predates a process type (say, before `worker` existed) cannot start that process; the dashboard warns before and the failure is reported plainly after.
 
 The next `shpyrd deploy` unpins the build and continues from the new source.
 

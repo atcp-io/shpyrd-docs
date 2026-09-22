@@ -7,7 +7,7 @@ description: The project file - which app a repository is, its process types, si
 
 ```yaml
 # Which project this repository (or directory) deploys to.
-app: hello-world
+project: hello-world
 
 # Process types. Declared types are authoritative: a type removed here is
 # removed from the cluster on the next deploy. Instance counts set with
@@ -15,9 +15,9 @@ app: hello-world
 processes:
   web:
     port: 8080          # exposed through the URL; PORT is injected. Default 8080 for web.
-    cpu: "1"            # size (limit). Default 1 CPU.
-    memory: 512Mi       # size (limit). Default 512Mi.
+    size: shared-m      # instance size from the cluster catalog (shpyrd sizes list). Default: shared-s.
   worker:
+    size: shared-xs
     replicas: 2         # pin the instance count
     command: ["/cnb/process/worker"]   # override the entrypoint (rarely needed)
     args: ["--queue", "default"]
@@ -38,10 +38,11 @@ domains:
 
 | Field | Meaning |
 | --- | --- |
-| `app` | Project name; used when `--app` is not given. Created with `shpyrd apps create <name>` (`--save` writes this file). |
+| `project` | Project name; used when `--project` is not given. Created with `shpyrd projects create <name>` (`--save` writes this file). `app` is accepted as an alias. |
 | `processes.<type>.port` | Port the process listens on. `web` defaults to 8080 and is published through the URL; other types get no port unless set. `PORT` is injected. |
 | `processes.<type>.replicas` | Pin the number of instances. Without it, `shpyrd scale` values are kept across deploys (default 1). |
-| `processes.<type>.cpu`, `memory` | Process size (Kubernetes limits). Defaults 1 CPU and 512Mi; requests are 100m and 128Mi, capped by the limits. Metrics show usage as a percentage of these. |
+| `processes.<type>.size` | Instance size from the cluster catalog (`shpyrd sizes list`): `shared-*` sizes get a guaranteed CPU share that can burst up to 4×, `dedicated-*` sizes get whole cores. Default: the catalog default (`shared-s`, 0.5 CPU / 64 MiB out of the box). Changing it is a release. |
+| `processes.<type>.cpu`, `memory` | Override the size's limits (e.g. `cpu: "1"`, `memory: 1Gi`). Prefer a size; use these for one-off needs. |
 | `processes.<type>.command`, `args` | Override the command. By default `web` runs the image entrypoint and other types run `/cnb/process/<type>`, the process the buildpacks recorded under that name. |
 | `build.env` | Environment for the build (buildpack configuration such as `BP_GO_TARGETS`, `BP_JVM_VERSION`, `BP_NODE_RUN_SCRIPTS`). Runtime config vars are set with `shpyrd secrets`, not here. |
 | `build.builder` | kpack `ClusterBuilder` to use. |

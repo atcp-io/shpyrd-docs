@@ -44,7 +44,7 @@ make cli
 Then deploy the bundled example, a Go module with a `web` and a `worker` process:
 
 ```shell
-shpyrd apps create hello-world
+shpyrd projects create hello-world
 cd examples/hello && shpyrd deploy
 shpyrd open                              # https://hello-world.127.0.0.1.nip.io
 shpyrd secrets set GREETING="Olá mundo"  # new release, the page picks it up
