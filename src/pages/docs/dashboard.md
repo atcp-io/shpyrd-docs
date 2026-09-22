@@ -7,14 +7,7 @@ The dashboard is served by the shpyrd server inside the cluster at `https://shpy
 
 ## Signing in
 
-```shell
-shpyrd cluster dashboard        # opens the browser signed in
-shpyrd cluster token            # prints the admin token for the login screen
-```
-
-`cluster dashboard` puts the token in the URL fragment (`#token=...`), which browsers never send to servers; the UI stores it locally and removes it from the address bar. The token is generated once at install time and lives in Secret `shpyrd-system/shpyrd-admin-token`.
-
-Themes: light, dark or system, from the selector in the header.
+`shpyrd cluster dashboard` opens the dashboard signed in with the admin token; the login page also accepts the token pasted by hand (`shpyrd cluster token`). With the `auth-local` extension enabled, the login page offers **Sign in with email and password** for accounts created with `shpyrd users add` or on the **Users** page; the header shows who is signed in and has a sign-out entry. See [Extensions and sign-in](/docs/extensions).
 
 ## Projects
 
@@ -51,7 +44,7 @@ Grafana, linked from the header, has the same data with the pre-provisioned "shp
 
 ## Cluster
 
-The **Cluster** page shows the environment profile, version and domain; **capacity**: CPU and memory **used** (what the machines are doing) versus **reserved** (what running processes have requested, which is what limits scheduling), in total and per node, with utilisation over time; the **instance size catalog** (add, change, delete sizes and pick the default); the installed components with versions; and the Helm releases in the cluster.
+The **Cluster** page shows the environment profile, version and domain; **capacity**: CPU and memory **used** (what the machines are doing) versus **reserved** (what running processes have requested, which is what limits scheduling), in total and per node, with utilisation over time; the **instance size catalog** (add, change, delete sizes and pick the default); the **extensions** with their state; the installed components with versions; and the Helm releases in the cluster.
 
 ## Security notes
 
