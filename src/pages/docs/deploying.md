@@ -8,8 +8,8 @@ The CLI talks to your cluster with your kubeconfig; the only call that reaches t
 ## Create a project
 
 ```shell
-shpyrd apps create my-service          # namespace app-my-service + App resource
-shpyrd apps create my-service --save   # also writes shpyrd.yaml (app: my-service) in the current directory
+shpyrd projects create my-service          # namespace app-my-service + App resource
+shpyrd projects create my-service --save   # also writes shpyrd.yaml (app: my-service) in the current directory
 ```
 
 Names are lowercase letters, digits and dashes (max 40 characters) and become the hostname: `https://my-service.<domain>`.
@@ -19,7 +19,7 @@ Names are lowercase letters, digits and dashes (max 40 characters) and become th
 From inside your repository:
 
 ```shell
-shpyrd deploy                 # app from shpyrd.yaml, or --app my-service
+shpyrd deploy                 # app from shpyrd.yaml, or --project my-service
 ```
 
 What happens:
@@ -66,7 +66,7 @@ Anything the Paketo buildpacks understand: Go, Node.js, Java, Python, Ruby, .NET
 Declare process types in [`shpyrd.yaml`](/docs/shpyrd-yaml) next to your code; `shpyrd deploy` applies it:
 
 ```yaml
-app: hello-world
+project: hello-world
 processes:
   web:
     port: 8080
@@ -132,15 +132,15 @@ A rollback is refused while another release is still rolling out (`--force` over
 
 ```shell
 shpyrd open                 # opens https://my-service.<domain>
-shpyrd apps info my-service
-shpyrd apps list
+shpyrd projects info my-service
+shpyrd projects list
 kubectl -n app-my-service get all,ingress,image.kpack.io
 ```
 
 ## Destroy
 
 ```shell
-shpyrd apps destroy my-service      # deletes namespace app-my-service and everything in it
+shpyrd projects destroy my-service      # deletes namespace app-my-service and everything in it
 ```
 
 Images stay in the registry.

@@ -14,13 +14,16 @@ Shpyrd is pre-alpha. The MVP described in [RFC-0001](https://github.com/atcp-io/
 
 ## Next
 
+The next phases are designed in [RFC-0002](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0002-extensions-and-security.md): extensions, projects with several resources (Postgres, Redis/Valkey, volumes) bound to apps through config vars, Dockerfile builds with BuildKit, shell access, authentication (local users, email/password, Okta via OIDC), teams and roles mirrored into Kubernetes RBAC, and production hardening (network policies, quotas, audit log).
+
+- **Instance sizes** (done): a cluster-wide catalog of shared and dedicated sizes, `shpyrd resize`, sizes in releases.
 - **Published binaries and images.** Release builds of the CLI (Homebrew, curl installer) and `ghcr.io/atcp-io/shpyrd-server` so `make cli` is no longer required.
 - **AWS profile.** EKS with the AWS Load Balancer Controller, ExternalDNS/Route53, ACM (or Let's Encrypt) and ECR, reusing the modules proven in the 2023 proofs of concept.
-- **Dockerfile builds.** For repositories that already have one, next to buildpacks.
+- **Dockerfile builds.** BuildKit jobs for repositories that have a Dockerfile, next to buildpacks (buildpacks and kpack cannot build application Dockerfiles).
 - **Log aggregation.** Loki and Alloy so logs survive restarts and can be searched over time.
-- **Add-ons.** Managed Postgres (CloudNativePG) and Redis attachable to a project as config vars, Heroku-style.
+- **Resources.** Managed Postgres (CloudNativePG), Redis/Valkey and persistent volumes attachable to an app as config vars, Heroku-style.
 - **Autoscaling and cost.** HPA/KEDA per process type; per-project cost from resource requests.
-- **Users and access.** OIDC login (Okta, GitHub) and per-project permissions instead of the single admin token.
+- **Users and access.** Local users, email/password and OIDC (Okta, GitHub) through one relying-party implementation; teams and roles per project, mirrored into Kubernetes RBAC.
 - **GitOps export as a first-class flow.** Keep `cluster export` in step with Flux and Argo CD conventions.
 - **`git push shpyrd main`.** A Git receiver on top of the existing archive deploy path.
 - **Agents.** First-class support for long-running, non-HTTP processes (queues, schedules, LLM agents) with the same deploy, config and observability story.
