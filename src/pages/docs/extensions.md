@@ -24,7 +24,7 @@ Extensions contribute an installer component, resource types with controllers, A
 
 ## Signing in with an account
 
-Out of the box the dashboard is protected by the **admin token** (`shpyrd cluster token`), which is right for one developer and for automation. With the `auth-local` extension, people get their own accounts:
+Out of the box the dashboard is protected by the **admin token** (`shpyrd cluster token`), which is right for one developer and for automation (and can be switched off later, see [the admin token](/docs/access#the-admin-token)). With the `auth-local` extension, people get their own accounts:
 
 ```shell
 shpyrd extensions enable auth-local
@@ -34,7 +34,7 @@ shpyrd users passwd ada@example.com
 shpyrd users rm ada@example.com
 ```
 
-The login page then offers **Sign in with email and password** next to the token. Signed-in users see who they are in the header and can sign out; a **Users** page lets administrators add, reset and remove accounts (the same operations as the CLI). Until teams and roles arrive ([RFC-0008](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0008-teams-roles-and-security.md)), every account is an administrator.
+The login page then offers **Sign in with email and password** next to the token. Signed-in users see who they are in the header and can sign out; a **Users** page lets platform admins add, reset and remove accounts (the same operations as the CLI). What each account may do is decided by [teams and roles](/docs/access).
 
 ### How it works
 

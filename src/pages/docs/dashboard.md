@@ -23,7 +23,7 @@ A project page has:
 - **Builds**: build history with status, strategy, reason, source and duration; select one to read its full output (live while building), and which releases use it.
 - **Config**: config var names and last-updated times; add, replace (blind), remove, or paste a `.env`. Variables provided by attached resources are listed read-only with their provider. Values are never shown.
 
-Actions that would start another release (Deploy, Rollback) are disabled while one is building or rolling out.
+Actions that would start another release (Deploy, Rollback) are disabled while one is building or rolling out, and everything a role cannot do is hidden or disabled ([teams and roles](/docs/access)). Project admins get a **Members** card; every project shows its **Recent actions** (the audit trail).
 
 ## Metrics
 
