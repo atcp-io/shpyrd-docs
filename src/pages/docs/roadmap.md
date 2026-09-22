@@ -22,11 +22,17 @@ Designed in [RFC-0003](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0003-pro
 - **Persistent volumes**: single-instance (block) and shared volumes mounted from `shpyrd.yaml`, with the access-mode rules enforced.
 - **Projects with several resources**: one resource list per project in the CLI, API and dashboard, and the binding plumbing that turns an attached resource into config vars.
 
+## Done (phase C)
+
+Designed in [RFC-0002](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0002-extension-model.md) and [RFC-0007](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0007-authentication.md):
+
+- **Extensions**: optional capabilities compiled in and enabled per cluster (`shpyrd extensions enable`), each contributing an installer component, controllers, API routes and CLI commands.
+- **Sign-in with accounts**: the server as an OpenID Connect relying party and the `auth-local` extension (Dex with local email/password accounts, `shpyrd users`, a Users page).
+
 ## Next
 
-The remaining phases are designed in the [RFC index](https://github.com/atcp-io/shpyrd/blob/main/rfcs/README.md): the extension model (RFC-0002), authentication (RFC-0007: local users, email/password, Okta via OIDC), teams and roles mirrored into Kubernetes RBAC with production hardening (RFC-0008), and Postgres and Redis resources (RFC-0009, RFC-0010).
+The remaining phases are designed in the [RFC index](https://github.com/atcp-io/shpyrd/blob/main/rfcs/README.md): teams and roles mirrored into Kubernetes RBAC with production hardening (RFC-0008), the fuller account system and company identity providers (RFC-0007 steps 3.2 and 3.3), and Postgres and Redis resources (RFC-0009, RFC-0010).
 
-- **Extensions and authentication** (phase C). In-tree extensions with their own components, resource types and CLI commands; the server as an OIDC relying party with local users through Dex.
 - **Teams, roles and security** (phase D). Project membership, roles mirrored into Kubernetes RBAC, network policies, quotas, audit log; Okta and email/password.
 - **Postgres and Redis** (phase E). CloudNativePG and Valkey resources attached to apps as config vars (`shpyrd attach db`), plus shared storage for volumes.
 - **Published binaries and images.** Release builds of the CLI (Homebrew, curl installer) and `ghcr.io/atcp-io/shpyrd-server` so `make cli` is no longer required.

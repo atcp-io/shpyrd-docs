@@ -68,6 +68,10 @@ Config vars are environment variables for every process, stored in Secret `<app>
 
 A project's `web` process is published at `https://<name>.<cluster domain>` (additional `domains` can be declared). Certificates come from cert-manager: the development CA on the local profile, a public or private CA on cloud profiles.
 
+## Extensions
+
+Optional capabilities are **extensions**: compiled into shpyrd, switched on per cluster with `shpyrd extensions enable`, each bringing its installer component, resource types and commands. `auth-local` (accounts for the dashboard) is the first; databases and caches follow. See [Extensions and sign-in](/docs/extensions).
+
 ## Environment profile
 
 The **profile** chosen at install time (`local` today) says how load balancing, DNS, TLS and the registry are provided; see [Installation](/docs/installation#environment-profiles).

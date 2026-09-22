@@ -3,7 +3,7 @@ title: CLI reference
 description: Every shpyrd command and its flags.
 ---
 
-`shpyrd` uses your kubeconfig (`--kubeconfig`, `--context` on every command; `-v` for verbose output). Project commands take `--project <name>` or read `app:` from `shpyrd.yaml` in the current directory. {% .lead %}
+`shpyrd` uses your kubeconfig (`--kubeconfig`, `--context` on every command; `-v` for verbose output). Project commands take `--project <name>` or read `project:` from `shpyrd.yaml` in the current directory. Commands contributed by extensions (`shpyrd users`) explain themselves when the extension is not enabled. {% .lead %}
 
 ## Cluster
 
@@ -17,6 +17,11 @@ description: Every shpyrd command and its flags.
 | `shpyrd cluster trust-ca` | Install the development root CA in the OS trust store (`--ca-dir`). |
 | `shpyrd cluster export` | Render the base stack manifests to a directory for GitOps tooling (`-o`, profile flags). |
 | `shpyrd cluster destroy` | Delete the kind cluster (`--name`, `--yes`). |
+| `shpyrd extensions list` | Extensions known to this build and whether they are enabled on the cluster. |
+| `shpyrd extensions enable <name>` | Install the extension's component and restart the server with it (`--set`). Also `cluster init --enable <name>`. |
+| `shpyrd extensions disable <name>` | Remove the component (`--yes`); refused while resources of the extension exist. |
+| `shpyrd users add <email>` | Create a local account (extension `auth-local`); `--name`, `--password` (prompted when omitted). |
+| `shpyrd users list`, `passwd <email>`, `rm <email>` | Manage local accounts. |
 
 ## Projects
 
@@ -57,5 +62,5 @@ description: Every shpyrd command and its flags.
 | --- | --- |
 | `~/.shpyrd/ca/` | development root CA (`rootCA.pem`, key) |
 | `~/.kube/config` | kind writes the `kind-shpyrd` context here |
-| namespace `shpyrd-system` | server, registry, admin token, install record |
+| namespace `shpyrd-system` | server, registry, admin token, install record, sessions mirror, Dex and its accounts when `auth-local` is enabled |
 | namespace `app-<name>` | one per project (label `shpyrd.io/project`): App, Volumes and their claims, Deployments, Services, Ingress, kpack Image and Builds or BuildKit Jobs, config var Secret, `<app>-bindings` and release snapshots |
