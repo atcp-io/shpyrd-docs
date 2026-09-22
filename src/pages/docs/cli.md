@@ -24,14 +24,14 @@ description: Every shpyrd command and its flags.
 | --- | --- |
 | `shpyrd projects create <name>` | Create the project. `--domain` extra hostnames, `--save` writes `shpyrd.yaml`. (`shpyrd apps` still works as an alias.) |
 | `shpyrd projects list` | Table of projects: phase, release, URL, age. |
-| `shpyrd projects info <name>` | Phase and message, URL, build digest, source, processes (with sizes and failing reasons), recent releases. |
+| `shpyrd projects info <name>` | Phase and message, URL, build digest, source, processes (with sizes and failing reasons), recent releases, and every resource of the project (app, attached resources, volumes). |
 | `shpyrd projects destroy <name>` | Delete the project and its namespace (`--yes`). |
 
 ## Deploying and running
 
 | Command | What it does |
 | --- | --- |
-| `shpyrd deploy` | Archive the committed tree of the current directory, upload, build and release. `--working-tree` deploys the directory as is; `--git <url> --ref <rev> --path <dir>` builds from Git; `--image <ref>` runs a prebuilt image; `--no-wait` returns immediately. Applies `shpyrd.yaml` (processes, sizes, build env, domains). |
+| `shpyrd deploy` | Archive the committed tree of the current directory, upload, build and release. `--working-tree` deploys the directory as is; `--git <url> --ref <rev> --path <dir>` builds from Git; `--dockerfile [path]` builds the Dockerfile (auto-detected for local deploys); `--image <ref>` runs a prebuilt image; `--no-wait` returns immediately. Applies `shpyrd.yaml` (processes, sizes, build, domains). |
 | `shpyrd scale web=N worker=M` | Set instance counts per process type. |
 | `shpyrd resize web=SIZE worker=SIZE` | Set instance sizes per process type (a release). |
 | `shpyrd sizes list` | The cluster's instance size catalog with kind, cpu, burst and memory. |
@@ -39,7 +39,13 @@ description: Every shpyrd command and its flags.
 | `shpyrd sizes delete <name>`, `shpyrd sizes default <name>` | Remove a size (not the default), choose the default. |
 | `shpyrd secrets set K=V ...` | Set config vars (new release, rolling restart). |
 | `shpyrd secrets unset K ...` | Remove config vars. |
-| `shpyrd secrets list` | Names and last-updated times. Values are never printed. |
+| `shpyrd secrets list` | Names and last-updated times, plus variables provided by attached resources. Values are never printed. |
+| `shpyrd shell [-- cmd...]` | Interactive shell in a running instance (`--process`, `--instance web.2`); with a command, runs it and returns its exit code. |
+| `shpyrd run <cmd...>` | One-off instance of the current release with the config vars: streams output, returns the exit code, removes the instance. `--size`, `--detach`. |
+| `shpyrd volumes create <name> --size 5Gi` | Create a persistent volume in the project (`--class`, `--shared`). |
+| `shpyrd volumes list` | Volumes with size, mode, status and what mounts them. |
+| `shpyrd volumes resize <name> --size 10Gi` | Grow a volume (when the storage class allows expansion). |
+| `shpyrd volumes delete <name>` | Delete a volume and its data (`--yes`; `--force` while mounted). |
 | `shpyrd logs` | Tail logs of every instance (`web.1`, `worker.2`...). `-f` follow, `-p <process>`, `-n <lines>`, `--build` for the latest build output. |
 | `shpyrd releases` | Release history with digests and descriptions. |
 | `shpyrd rollback [N]` | Re-release N (default: the previous release) with its build and config vars. Refused while another release is rolling out unless `--force`; `--no-wait`. |
@@ -52,4 +58,4 @@ description: Every shpyrd command and its flags.
 | `~/.shpyrd/ca/` | development root CA (`rootCA.pem`, key) |
 | `~/.kube/config` | kind writes the `kind-shpyrd` context here |
 | namespace `shpyrd-system` | server, registry, admin token, install record |
-| namespace `app-<name>` | one per project: App, Deployments, Services, Ingress, kpack Image and Builds, config var Secret and release snapshots |
+| namespace `app-<name>` | one per project (label `shpyrd.io/project`): App, Volumes and their claims, Deployments, Services, Ingress, kpack Image and Builds or BuildKit Jobs, config var Secret, `<app>-bindings` and release snapshots |
