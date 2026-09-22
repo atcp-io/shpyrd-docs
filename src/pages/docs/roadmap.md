@@ -29,11 +29,15 @@ Designed in [RFC-0002](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0002-ext
 - **Extensions**: optional capabilities compiled in and enabled per cluster (`shpyrd extensions enable`), each contributing an installer component, controllers, API routes and CLI commands.
 - **Sign-in with accounts**: the server as an OpenID Connect relying party and the `auth-local` extension (Dex with local email/password accounts, `shpyrd users`, a Users page).
 
+## Done (phase D)
+
+Designed in [RFC-0008](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0008-teams-roles-and-security.md): teams and per-project roles enforced by the API and hidden by the dashboard, the Kubernetes RBAC mirror, network isolation per project, restricted pod security for app containers, hardened dashboard sessions, admin token rotation and the audit trail. See [Teams, roles and security](/docs/access).
+
 ## Next
 
-The remaining phases are designed in the [RFC index](https://github.com/atcp-io/shpyrd/blob/main/rfcs/README.md): teams and roles mirrored into Kubernetes RBAC with production hardening (RFC-0008), the fuller account system and company identity providers (RFC-0007 steps 3.2 and 3.3), and Postgres and Redis resources (RFC-0009, RFC-0010).
+The remaining phases are designed in the [RFC index](https://github.com/atcp-io/shpyrd/blob/main/rfcs/README.md): the fuller account system and company identity providers (RFC-0007 steps 3.2 and 3.3), Postgres and Redis resources (RFC-0009, RFC-0010), and the rest of RFC-0008.
 
-- **Teams, roles and security** (phase D). Project membership, roles mirrored into Kubernetes RBAC, network policies, quotas, audit log; Okta and email/password.
+- **Security, continued.** Resource quotas per project, enforce-mode pod security, image signing and CVE reporting, per-user API tokens; Okta and the email/password account system.
 - **Postgres and Redis** (phase E). CloudNativePG and Valkey resources attached to apps as config vars (`shpyrd attach db`), plus shared storage for volumes.
 - **Published binaries and images.** Release builds of the CLI (Homebrew, curl installer) and `ghcr.io/atcp-io/shpyrd-server` so `make cli` is no longer required.
 - **AWS profile.** EKS with the AWS Load Balancer Controller, ExternalDNS/Route53, ACM (or Let's Encrypt) and ECR, reusing the modules proven in the 2023 proofs of concept.

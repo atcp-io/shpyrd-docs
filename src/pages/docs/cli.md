@@ -22,6 +22,11 @@ description: Every shpyrd command and its flags.
 | `shpyrd extensions disable <name>` | Remove the component (`--yes`); refused while resources of the extension exist. |
 | `shpyrd users add <email>` | Create a local account (extension `auth-local`); `--name`, `--password` (prompted when omitted). |
 | `shpyrd users list`, `passwd <email>`, `rm <email>` | Manage local accounts. |
+| `shpyrd teams create <name>` | Create or update a team: `--member <email>`, `--group <idp group>`, `--platform-role platform-admin\|platform-viewer`, `--description`. |
+| `shpyrd teams list`, `add <team> <email...>`, `remove <team> <email...>`, `delete <team> --yes` | Manage teams (`--group` for identity provider groups). |
+| `shpyrd members add <project> --user <email>\|--team <name> --role viewer\|developer\|admin` | Grant a role on a project. |
+| `shpyrd members list [project]`, `remove <project> --user\|--team` | List and remove grants. |
+| `shpyrd cluster token --rotate` | Replace the admin token and restart the server. |
 
 ## Projects
 
