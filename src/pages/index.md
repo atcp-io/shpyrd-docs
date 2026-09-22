@@ -27,6 +27,7 @@ Shpyrd turns a Kubernetes cluster into a platform you can `deploy` to: push code
 - **Releases you can trust.** Every deploy, config change or rollback is a numbered release that records its build and its config vars. Rolling back restores both.
 - **Config vars that stay secret.** Set, replace and remove them from the CLI or the dashboard; values are never shown again.
 - **Accounts, teams and roles.** The dashboard starts with an admin token; enable `auth-local` for email/password accounts, grant viewer, developer or admin roles per project, and get the same view in `kubectl` through the RBAC mirror. Projects are isolated from each other and every action is audited.
+- **Databases and caches.** `shpyrd pg create db` and `shpyrd redis create cache`, then `shpyrd attach` to get `DATABASE_URL` and `REDIS_URL` in the app, Heroku style.
 - **A shell when you need one.** `shpyrd shell` into a running instance, `shpyrd run` for migrations and scripts, `shpyrd volumes` for disks that survive deploys.
 - **Logs and metrics out of the box.** Instance-named logs (`web.1`, `worker.2`), throughput by status class, response time percentiles, CPU and memory as a percentage of each process' allocation, cluster capacity.
 - **One binary, no cloud account.** The whole base stack (cert-manager, ingress, registry, kpack, Prometheus, Grafana) is installed by the CLI in dependency-ordered runlevels on a local [kind](https://kind.sigs.k8s.io) cluster today; cloud profiles come next.

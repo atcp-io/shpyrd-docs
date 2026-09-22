@@ -33,9 +33,15 @@ Designed in [RFC-0002](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0002-ext
 
 Designed in [RFC-0008](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0008-teams-roles-and-security.md): teams and per-project roles enforced by the API and hidden by the dashboard, the Kubernetes RBAC mirror, network isolation per project, restricted pod security for app containers, hardened dashboard sessions, admin token rotation and the audit trail. See [Teams, roles and security](/docs/access).
 
+## Done (phase E)
+
+Designed in [RFC-0009](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0009-postgres-resource.md) and [RFC-0010](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0010-redis-resource.md): PostgreSQL databases on CloudNativePG and Valkey/Redis stores as project resources, attached to apps with `shpyrd attach` as `DATABASE_URL` and `REDIS_URL`. See [Databases and caches](/docs/databases).
+
 ## Next
 
-The remaining phases are designed in the [RFC index](https://github.com/atcp-io/shpyrd/blob/main/rfcs/README.md): the fuller account system and company identity providers (RFC-0007 steps 3.2 and 3.3), Postgres and Redis resources (RFC-0009, RFC-0010), and the rest of RFC-0008.
+The remaining work is designed in the [RFC index](https://github.com/atcp-io/shpyrd/blob/main/rfcs/README.md): the fuller account system and company identity providers (RFC-0007 steps 3.2 and 3.3), the rest of RFC-0008, database backups and pooling (RFC-0009), Redis high availability (RFC-0010) and shared storage (RFC-0006).
+
+- **Data stores, continued.** Backups to object storage and point-in-time recovery, PgBouncer pooling, credential rotation; Redis Sentinel through an operator; the `storage-rwx` extension for shared volumes.
 
 - **Security, continued.** Resource quotas per project, enforce-mode pod security, image signing and CVE reporting, per-user API tokens; Okta and the email/password account system.
 - **Postgres and Redis** (phase E). CloudNativePG and Valkey resources attached to apps as config vars (`shpyrd attach db`), plus shared storage for volumes.

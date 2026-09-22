@@ -55,6 +55,12 @@ description: Every shpyrd command and its flags.
 | `shpyrd volumes list` | Volumes with size, mode, status and what mounts them. |
 | `shpyrd volumes resize <name> --size 10Gi` | Grow a volume (when the storage class allows expansion). |
 | `shpyrd volumes delete <name>` | Delete a volume and its data (`--yes`; `--force` while mounted). |
+| `shpyrd pg create <name> --project <p>` | Create a PostgreSQL database (extension `postgres`): `--version`, `--size`, `--storage`, `--instances`. |
+| `shpyrd pg list\|info\|psql\|delete` | Manage databases; `psql <name> -- <args>` opens psql on the primary; delete is refused while attached (`--force`). |
+| `shpyrd redis create <name> --project <p>` | Create a Valkey or Redis store (extension `redis`): `--engine`, `--version`, `--size`, `--persistent`, `--storage`. |
+| `shpyrd redis list\|info\|cli\|delete` | Manage stores; `cli <name> -- <args>` runs valkey-cli or redis-cli. |
+| `shpyrd attach <resource>` | Attach a database or store to the app as config vars (`--kind` when ambiguous, `--prefix`). A release. |
+| `shpyrd detach <resource>` | Remove the attachment (a release). |
 | `shpyrd logs` | Tail logs of every instance (`web.1`, `worker.2`...). `-f` follow, `-p <process>`, `-n <lines>`, `--build` for the latest build output. |
 | `shpyrd releases` | Release history with digests and descriptions. |
 | `shpyrd rollback [N]` | Re-release N (default: the previous release) with its build and config vars. Refused while another release is rolling out unless `--force`; `--no-wait`. |

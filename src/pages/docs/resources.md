@@ -3,7 +3,7 @@ title: Resources
 description: A project holds several resources - the app, volumes and, soon, databases and caches - and attaching one to the app turns it into config vars.
 ---
 
-A project is a namespace with resources in it. The app is one; volumes are the second resource type, and Postgres and Redis follow. `shpyrd projects info` and the project page list them all with their status and what uses them. {% .lead %}
+A project is a namespace with resources in it: the app, volumes, PostgreSQL databases and Redis-compatible stores. `shpyrd projects info` and the project page list them all with their status and what uses them. {% .lead %}
 
 ```
 Resources:
@@ -57,6 +57,4 @@ On the local profile the bytes live on the kind node, so `shpyrd cluster destroy
 
 ## Attaching resources
 
-Attaching a resource to the app injects its connection details as config vars, Heroku style: a Postgres named `db` provides `DATABASE_URL`, `DATABASE_HOST`, ... The variables are read-only in the Config tab and `shpyrd secrets list`, shown with the resource that provides them, and take precedence over a config var of the same name. Attaching or detaching is a `config` release ("Attach db") that rollback undoes like any other.
-
-The plumbing is in place (the App spec has `bindings`, the controller renders them into a Secret next to the config vars); the first attachable resource types, Postgres ([RFC-0009](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0009-postgres-resource.md)) and Redis ([RFC-0010](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0010-redis-resource.md)), bring `shpyrd attach` and `shpyrd detach` with them.
+Attaching a resource to the app injects its connection details as config vars, Heroku style: a Postgres named `db` provides `DATABASE_URL`, `DATABASE_HOST`, ... The variables are read-only in the Config tab and `shpyrd secrets list`, shown with the resource that provides them, and take precedence over a config var of the same name. Attaching or detaching is a `config` release ("Attach Postgres db") that rollback undoes like any other. See [Databases and caches](/docs/databases) for `shpyrd pg`, `shpyrd redis`, `shpyrd attach` and `shpyrd detach`.
