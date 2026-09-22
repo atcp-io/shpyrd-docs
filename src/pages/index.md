@@ -1,82 +1,67 @@
 ---
 title: Getting started
-pageTitle: Shpyrd - Make infrastructure easy again.
-description: Opensource Enterprise Kubernetes Management. Simple application deploy and monitoring.
+pageTitle: Shpyrd - Opensource Cloud PaaS
+description: Manage applications and agents stack from one place, from deploy to monitoring.
 ---
 
-Learn how to install Shpyrd and deploy your first application in less than 30 minutes. {% .lead %}
+Shpyrd turns a Kubernetes cluster into a platform you can `deploy` to: push code, get a URL with TLS, logs, metrics, releases and rollbacks, without writing Dockerfiles or YAML. {% .lead %}
 
 {% quick-links %}
 
-{% quick-link title="Installation" icon="installation" href="/" description="Step-by-step guides to setting up your system and installing the library." /%}
+{% quick-link title="Installation" icon="installation" href="/docs/installation" description="Create a local cluster with the base stack in one command, or install it on an existing cluster." /%}
 
-{% quick-link title="Architecture guide" icon="presets" href="/" description="Learn how the internals work and contribute." /%}
+{% quick-link title="Deploying" icon="presets" href="/docs/deploying" description="Create a project, deploy from a checkout or a Git URL, set config vars, scale, watch logs, roll back." /%}
+
+{% quick-link title="Dashboard" icon="theming" href="/docs/dashboard" description="Projects, releases, builds, streamed logs and Heroku-style metrics in a web UI." /%}
+
+{% quick-link title="Architecture guide" icon="plugins" href="/docs/architecture-guide" description="How the installer, the App controller and the server fit together." /%}
 
 {% /quick-links %}
 
 ---
 
-## Goals
+## What you get
 
-- Simpler application go-live, less configs
-- Improve application platform costs
-- Improve observability costs
-- Improve devops costs
+- **Deploys from source.** `shpyrd deploy` archives your checkout (or points at a Git URL); the cluster builds it with [Cloud Native Buildpacks](https://buildpacks.io) (Go, Node.js, Java, Python, Ruby, .NET, static sites) and rolls it out. No Dockerfile, no manifests.
+- **Processes, Heroku style.** A project can run several process types (`web`, `worker`, ...). Only `web` gets a URL; a project without `web` is a background worker or an agent.
+- **Releases you can trust.** Every deploy, config change or rollback is a numbered release that records its build and its config vars. Rolling back restores both.
+- **Config vars that stay secret.** Set, replace and remove them from the CLI or the dashboard; values are never shown again.
+- **Logs and metrics out of the box.** Instance-named logs (`web.1`, `worker.2`), throughput by status class, response time percentiles, CPU and memory as a percentage of each process' allocation, cluster capacity.
+- **One binary, no cloud account.** The whole base stack (cert-manager, ingress, registry, kpack, Prometheus, Grafana) is installed by the CLI in dependency-ordered runlevels on a local [kind](https://kind.sigs.k8s.io) cluster today; cloud profiles come next.
 
-### Features
+## Quick start
 
-- Opensource
-- Metrics (pre packaged dashboards aimed for web and workers)
-- Logs
-- Other observability (using opentelemetry)
-- Autoscale
-- Cost
-- Image management including builds
-- Loadbalancer, DNS and hostname auto management
-- Disaster recovery (Cluster recreation)
-- Zero config for apps
+Requirements: Docker (Docker Desktop with 6-8 GB of memory) and, until binaries are published, Go 1.27 to build the CLI.
 
-### Prototype
+```shell
+git clone https://github.com/atcp-io/shpyrd && cd shpyrd
+make cli
+./bin/shpyrd cluster create        # kind cluster + base stack, 10-20 min the first time
+./bin/shpyrd cluster trust-ca      # trust the development CA (asks for sudo)
+./bin/shpyrd cluster dashboard     # opens https://shpyrd.127.0.0.1.nip.io signed in
+```
 
-{% loom src="https://www.loom.com/embed/c36cff00405d45d887fdde7a74a8b2cc?sid=8f5ce8fd-1d81-41c6-bf6d-07235f5e5589" /%}
+Then deploy the bundled example, a Go module with a `web` and a `worker` process:
 
----
+```shell
+shpyrd apps create hello-world
+cd examples/hello && shpyrd deploy
+shpyrd open                              # https://hello-world.127.0.0.1.nip.io
+shpyrd secrets set GREETING="Olá mundo"  # new release, the page picks it up
+shpyrd scale web=3 worker=2
+shpyrd logs -f
+```
 
-## Basic usage
+{% callout title="Ports 80 and 443 taken?" %}
+`shpyrd cluster create --http-port 8080 --https-port 8443` maps other host ports; URLs then carry the port (`https://hello-world.127.0.0.1.nip.io:8443`).
+{% /callout %}
 
-TODO
+## Status
 
-### Your first managed cluster
-
-TODO
-
-### Deploying your first app
-
-TODO
-
----
+Shpyrd is pre-alpha. The [MVP](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md) runs on a local kind cluster and is developed in the open; see the [roadmap](/docs/roadmap) for what comes next and [how to contribute](/docs/how-to-contribute).
 
 ## Getting help
 
-We are pleased to have you in our community, contributing and benefiting from our shared knowledge and collaborative efforts. 
-
-### Submit an issue
-
-Should you encounter any issues, we want to inform you that we use GitHub Issues as our main platform for tracking bugs, improvements, and feature requests. This collaborative and transparent approach allows us to improve our project swiftly and more effectively.
-
-To submit an issue, kindly visit our [GitHub Issues](https://github.com/atcp-io/shpyrd/issues)
-
-Not only can you submit issues, but we also encourage all users to help each other there. If you see an issue you know how to fix, feel free to leave a comment, or even better, submit a pull request with a solution. By doing so, we can benefit from each other's knowledge and collectively make our project better.
-
-### Join our community on discord
-
-We're thrilled that you're interested in our project! If you're eager to delve deeper, consider joining our vibrant community on Discord. It's the perfect space to discuss ideas, collaborate, and get the latest updates from our team.
-
-We're especially seeking dedicated community members who are interested in stepping up as maintainers. If you have a passion for improving and managing projects, and want to take a more active role in shaping our project's future, we'd love to hear from you.
-
-Maintainers are invaluable to our team, helping to oversee code submissions, managing issues, and ensuring the overall quality of our project. It's a role that offers the chance to influence our project's trajectory and make a significant impact on our community.
-
-To get involved, [simply click here to join our Discord channel](https://discord.gg/AxWMXXW7). We're excited to welcome you into our community and can't wait to collaborate with you 💗!
-
-### Supporting Companies
-
+- Bugs, ideas and questions: [GitHub issues](https://github.com/atcp-io/shpyrd/issues).
+- Design changes go through short [RFCs](https://github.com/atcp-io/shpyrd/tree/main/rfcs).
+- Community chat: [Discord](https://discord.gg/AxWMXXW7).

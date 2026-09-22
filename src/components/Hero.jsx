@@ -9,18 +9,21 @@ import blurCyanImage from '@/images/blur-cyan.png'
 import blurIndigoImage from '@/images/blur-indigo.png'
 import shpyrdBackground from '@/images/shpyrd-background.png'
 
-const codeLanguage = 'javascript'
-const code = `export default {
-  strategy: 'predictive',
-  engine: {
-    cpus: 12,
-    backups: ['./storage/cache.wtf'],
-  },
-}`
+const codeLanguage = 'bash'
+const code = `$ shpyrd apps create hello-world
+$ shpyrd deploy
+==> Archiving HEAD (654f4925638e)
+==> Building
+===> detect  4 of 9 buildpacks participating
+===> build   web, worker
+==> Releasing
+    Running: web 3/3 · worker 2/2
+Released v1: Initial deploy 654f4925638e
+https://hello-world.127.0.0.1.nip.io`
 
 const tabs = [
-  { name: 'cache-advance.config.js', isActive: true },
-  { name: 'package.json', isActive: false },
+  { name: 'terminal', isActive: true },
+  { name: 'shpyrd.yaml', isActive: false },
 ]
 
 function TrafficLightsIcon(props) {
@@ -50,13 +53,13 @@ export function Hero() {
             />
             <div className="relative">
               <p className="inline bg-gradient-to-r from-orange-600 via-orange-400 to-orange-600 bg-clip-text font-display text-5xl tracking-tight text-transparent">
-                Opensource Enterprise Kubernetes Management
+                Opensource Cloud PaaS
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
-                Manage the entire application stack from one place, from deploy to monitoring.
+                Manage applications and agents stack from one place, from deploy to monitoring.
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
-                <Button href="/#basic-usage">Get started</Button>
+                <Button href="/#quick-start">Get started</Button>
                 <Button href="https://github.com/atcp-io/shpyrd" variant="secondary">
                   View on GitHub
                 </Button>

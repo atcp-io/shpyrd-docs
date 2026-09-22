@@ -17,40 +17,25 @@ export const navigation = [
     links: [
       { title: 'Getting started', href: '/' },
       { title: 'Installation', href: '/docs/installation' },
+      { title: 'Concepts', href: '/docs/concepts' },
     ],
   },
   {
-    title: 'Topic One',
+    title: 'Using shpyrd',
     links: [
-      {
-        title: 'Section One',
-        href: '/docs/section-one',
-      },
-      {
-        title: 'Section Two',
-        href: '/docs/section-two',
-      }
+      { title: 'Deploying', href: '/docs/deploying' },
+      { title: 'shpyrd.yaml', href: '/docs/shpyrd-yaml' },
+      { title: 'Dashboard', href: '/docs/dashboard' },
+      { title: 'CLI reference', href: '/docs/cli' },
     ],
   },
   {
-    title: 'Topic Two',
+    title: 'Project',
     links: [
-      {
-        title: 'Section Three',
-        href: '/docs/section-three',
-      },
-      {
-        title: 'Section Four',
-        href: '/docs/section-four',
-      }
-    ],
-  },
-  {
-    title: 'Contributing',
-    links: [
-      { title: 'How to contribute', href: '/docs/how-to-contribute' },
       { title: 'Architecture guide', href: '/docs/architecture-guide' },
       { title: 'Design principles', href: '/docs/design-principles' },
+      { title: 'Roadmap', href: '/docs/roadmap' },
+      { title: 'How to contribute', href: '/docs/how-to-contribute' },
     ],
   },
 ]
