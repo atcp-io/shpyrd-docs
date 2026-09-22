@@ -1,36 +1,48 @@
 ---
 title: How to contribute
-description: Our guide on how you can help our project.
+description: Set up a development environment, find something to work on and send a change.
 ---
 
-Welcome to the Shpyrd project! We're excited that you want to get involved and contribute to our community. Below are several ways you can participate and make a positive impact on Shpyrd:
+Shpyrd is developed in the open at [github.com/atcp-io/shpyrd](https://github.com/atcp-io/shpyrd) under the MPL-2.0 license. Issues, ideas and pull requests are welcome. {% .lead %}
 
----
+## Where to start
 
-## Engage with the Community
+- **Try it and report.** Run the [quick start](/) on your machine and open an issue for anything confusing, slow or broken. UX feedback is as valuable as code at this stage.
+- **Pick an issue.** The [issue tracker](https://github.com/atcp-io/shpyrd/issues) has bugs and roadmap items. Comment on one before starting so work is not duplicated.
+- **Propose a change.** Small fixes go straight to a pull request. Anything that changes behaviour or architecture starts as a short RFC (`rfcs/0000-template.md`) or an issue describing the problem first.
+- **Talk.** Questions and discussions happen on [Discord](https://discord.gg/AxWMXXW7); the [code of conduct](https://github.com/atcp-io/shpyrd/blob/main/CODE_OF_CONDUCT.md) applies everywhere.
 
-Our community actively connects on Discord. Join our Discord server to interact with other contributors and users. Here, you can ask questions, share ideas, and discuss potential improvements or changes to Shpyrd. To maintain a friendly and inclusive environment, please abide by our code of conduct during all interactions.
+## Development environment
 
-Make sure to take some time to read the architecture overview of Shpyrd. Understanding the design and structure will help you contribute effectively and align your efforts with the project's objectives.
+Docker, Go 1.27 and Node.js 22 (for the dashboard).
 
-## Issue Hunting
+```shell
+git clone https://github.com/atcp-io/shpyrd && cd shpyrd
+make cli                      # ./bin/shpyrd
+make dev-cluster              # kind cluster with everything except the shpyrd server
+make dev-deploy               # build the server image, load it into kind, apply the shpyrd component
+```
 
-One of the most valuable contributions you can make is finding and addressing existing issues. Check out our GitHub issue tracker to discover problems, bugs, or feature requests that require attention. Feel free to seek clarification or additional information on any issue that catches your interest.
+`make dev-deploy` again after changes to the server, controller or UI. For the dashboard alone, run `go run ./cmd/shpyrd-server --context kind-shpyrd --no-controller` in one terminal and `cd ui && npm run dev` in another (Vite proxies `/api`).
 
-If you decide to work on a particular issue, ensure you are assigned to it or indicate your intention to prevent duplicate efforts. Once you have a solution, submit a pull request to share your proposed changes with the community for review.
+Useful targets:
 
-## Propose New Features
+```shell
+make test vet                 # Go tests and vet
+make generate                 # regenerate the App CRD and deepcopy code after editing api/
+cd ui && npm run lint && npm run build
+shpyrd cluster init --only shpyrd --set SHPYRD_SERVER_IMAGE=shpyrd-server:dev   # re-apply one component
+```
 
-We love hearing fresh ideas for Shpyrd! If you have exciting proposals for new features that could enhance the project, we'd like to know. Start by creating a new GitHub issue that describes the feature in detail. Engage with the community on Discord to gather feedback and refine your concept.
+Manifests under `deploy/` are embedded in the binaries: rebuild the CLI after editing them.
 
-Remember, collaboration with the community and project maintainers will help shape the proposal and ensure its successful implementation.
+## Conventions
 
-## Support through Donations
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org) (`feat:`, `fix:`, `docs:`, `chore:`) and carry a DCO sign-off (`git commit -s`).
+- Go code is `gofmt`ed and `go vet` clean; the UI is `oxlint` clean.
+- Tests live next to the code: `internal/controller` (reconciler with a fake client), `pkg/api` (handlers with fake clients and an httptest Prometheus), `pkg/install` (every component renders offline).
+- User-facing names follow the [concepts](/docs/concepts): projects, processes, instances, builds, releases, config vars.
 
-Maintaining and developing Shpyrd requires both time and resources. If you find Shpyrd valuable and wish to contribute beyond code, consider supporting us through donations. Donations help cover support community events, and encourage further development.
+## Documentation
 
-Your contribution, regardless of its size, will be highly appreciated and will go a long way in supporting the sustainability of Shpyrd.
-
----
-
-Thank you for your interest in contributing to the Shpyrd project. We value the participation of every community member, and your contributions play a crucial role in making Shpyrd a success. Whether you're actively coding, discussing ideas, or supporting us through donations, your efforts are highly valued and impactful. Together, let's create something remarkable with Shpyrd!
+This site lives in [atcp-io/shpyrd-docs](https://github.com/atcp-io/shpyrd-docs) (Next.js + Markdoc). Pages are Markdown files under `src/pages/docs`; the navigation is in `src/components/Layout.jsx`. Run `npm install && npm run dev` to preview.
