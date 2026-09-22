@@ -24,7 +24,7 @@ Extensions contribute an installer component, resource types with controllers, A
 
 ## Signing in with an account
 
-Out of the box the dashboard is protected by the **admin token** (`shpyrd cluster token`), which is right for one developer and for automation. With the `auth-local` extension, people get their own accounts:
+Out of the box the dashboard is protected by the **admin token** (`shpyrd cluster token`), which is right for one developer and for automation (and can be switched off later, see [the admin token](/docs/access#the-admin-token)). With the `auth-local` extension, people get their own accounts:
 
 ```shell
 shpyrd extensions enable auth-local

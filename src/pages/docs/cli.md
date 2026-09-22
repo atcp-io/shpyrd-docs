@@ -12,8 +12,8 @@ description: Every shpyrd command and its flags.
 | `shpyrd cluster create` | Create a kind cluster and install the base stack. `--name`, `--workers`, `--image`, `--http-port`, `--https-port`, `--domain`, `--profile`, `--skip`, `--only`, `--set SHPYRD_X=y`, `--no-init`. |
 | `shpyrd cluster init` | Install or upgrade the base stack on the current context. Same profile flags; `--yes` for non-kind contexts. Re-running is idempotent. |
 | `shpyrd cluster status` | Health of every component, with versions and install times. Exit code 1 when something is not ready. |
-| `shpyrd cluster dashboard` | Open the dashboard in the browser, signed in with the admin token. `--no-open` just prints URL and token. |
-| `shpyrd cluster token` | Print the admin token (Secret `shpyrd-system/shpyrd-admin-token`). |
+| `shpyrd cluster dashboard` | Open the dashboard in the browser, signed in as you through a one-time login ticket (60 s). `--no-open` prints the URL and the link. |
+| `shpyrd cluster token` | Print the admin token (Secret `shpyrd-system/shpyrd-admin-token`). `--rotate` replaces it, `--disable`/`--enable` switch it off and on (disable needs a login provider and a platform-admin team). |
 | `shpyrd cluster trust-ca` | Install the development root CA in the OS trust store (`--ca-dir`). |
 | `shpyrd cluster export` | Render the base stack manifests to a directory for GitOps tooling (`-o`, profile flags). |
 | `shpyrd cluster destroy` | Delete the kind cluster (`--name`, `--yes`). |
@@ -26,7 +26,6 @@ description: Every shpyrd command and its flags.
 | `shpyrd teams list`, `add <team> <email...>`, `remove <team> <email...>`, `delete <team> --yes` | Manage teams (`--group` for identity provider groups). |
 | `shpyrd members add <project> --user <email>\|--team <name> --role viewer\|developer\|admin` | Grant a role on a project. |
 | `shpyrd members list [project]`, `remove <project> --user\|--team` | List and remove grants. |
-| `shpyrd cluster token --rotate` | Replace the admin token and restart the server. |
 
 ## Projects
 

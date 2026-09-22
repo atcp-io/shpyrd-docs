@@ -49,7 +49,16 @@ Every project namespace gets:
 
 - **A network policy.** Ingress only from the project's own pods, the ingress controller (your URL) and the monitoring namespace (metrics). Egress to the project, to platform namespaces (DNS, the registry, bound services) and to the internet, never to other projects. Projects talk to each other only through what a binding exposes.
 - **Pod security.** The `restricted` Pod Security Standard is applied in warn and audit mode, and shpyrd runs every process (and every `shpyrd run` instance) as a non-root user with all capabilities dropped and the runtime's default seccomp profile. Buildpack images comply already; a Dockerfile needs a numeric `USER` (`USER 1000`): a named user cannot be verified by Kubernetes and is refused with an explanation, as is an image running as root.
-- **Hardened dashboard.** HttpOnly session cookies with CSRF tokens, security headers with a strict Content Security Policy, a rate limit on sign-in, and `shpyrd cluster token --rotate` to replace the admin token (the server restarts with it; automation using the old value must be updated).
+- **Hardened dashboard.** HttpOnly session cookies with CSRF tokens, security headers with a strict Content Security Policy, and a rate limit on sign-in.
+
+## The admin token
+
+The token created at install time is a shared credential with full platform-admin rights, meant for bootstrap and automation. Obtaining it requires reading Secrets in `shpyrd-system` (`shpyrd cluster token`), which is cluster-admin access; the risk is in the copies you hand out. Keep it in check:
+
+- `shpyrd cluster dashboard` does **not** put the token in the browser: it mints a one-time login ticket (a hashed Secret valid for 60 seconds) that the browser redeems for a normal session, attributed to you as `user@host` in the audit trail.
+- `shpyrd cluster token --rotate` replaces it and restarts the server; update automation that used the old value.
+- `shpyrd cluster token --disable` switches it off once accounts exist and a `platform-admin` team has members: the API then refuses the token and everyone signs in with an account. `--enable` turns it back on.
+- Wrong tokens are audited and throttled per client (20 attempts a minute, after which even the right token waits).
 
 ## Audit trail
 
