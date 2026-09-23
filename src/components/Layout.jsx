@@ -40,6 +40,7 @@ export const navigation = [
       { title: 'Design principles', href: '/docs/design-principles' },
       { title: 'Roadmap', href: '/docs/roadmap' },
       { title: 'How to contribute', href: '/docs/how-to-contribute' },
+      { title: 'Support the project', href: 'https://donate.stripe.com/9B63cxfbwg8H31OgPX2ZO01' },
     ],
   },
 ]
@@ -148,7 +149,7 @@ export function Layout({
 }) {
   let router = useRouter()
   let isHomePage = router.pathname === '/'
-  let allLinks = navigation.flatMap((section) => section.links)
+  let allLinks = navigation.flatMap((section) => section.links).filter((link) => !link.href.startsWith('http'))
   let linkIndex = allLinks.findIndex((link) => link.href === router.pathname)
   let previousPage = linkIndex > -1 ? allLinks[linkIndex - 1] : null
   let nextPage = linkIndex > -1 ? allLinks[linkIndex + 1] : null
