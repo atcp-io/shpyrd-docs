@@ -16,6 +16,7 @@ export const navigation = [
     title: 'Introduction',
     links: [
       { title: 'Getting started', href: '/' },
+      { title: 'Tour', href: '/docs/tour' },
       { title: 'Installation', href: '/docs/installation' },
       { title: 'Concepts', href: '/docs/concepts' },
     ],
