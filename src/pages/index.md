@@ -22,6 +22,10 @@ Shpyrd turns a Kubernetes cluster into a platform you can `deploy` to: push code
 
 ## What you get
 
+[![The shop project in the dashboard](/screenshots/project-overview.png)](/docs/tour)
+
+Take the [tour](/docs/tour) for every feature with a screenshot.
+
 - **Deploys from source.** `shpyrd deploy` archives your checkout (or points at a Git URL); the cluster builds it with [Cloud Native Buildpacks](https://buildpacks.io) (Go, Node.js, Java, Python, Ruby, .NET, static sites), or with your `Dockerfile` when there is one, and rolls it out. No manifests.
 - **Processes, Heroku style.** A project can run several process types (`web`, `worker`, ...). Only `web` gets a URL; a project without `web` is a background worker or an agent.
 - **Releases you can trust.** Every deploy, config change or rollback is a numbered release that records its build and its config vars. Rolling back restores both.
