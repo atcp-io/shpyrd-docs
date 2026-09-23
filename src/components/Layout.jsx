@@ -28,6 +28,7 @@ export const navigation = [
       { title: 'shpyrd.yaml', href: '/docs/shpyrd-yaml' },
       { title: 'Resources', href: '/docs/resources' },
       { title: 'Databases and caches', href: '/docs/databases' },
+      { title: 'Logs', href: '/docs/logs' },
       { title: 'Extensions and sign-in', href: '/docs/extensions' },
       { title: 'Teams, roles and security', href: '/docs/access' },
       { title: 'Dashboard', href: '/docs/dashboard' },

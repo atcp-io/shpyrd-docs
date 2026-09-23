@@ -226,16 +226,10 @@ Volumes are persistent: they outlive deploys, scaling and crashes and are delete
 ## Logs
 
 ```shell
-shpyrd logs -f                       # all instances, live
-shpyrd logs --process worker -n 200  # one process type, last 200 lines per instance
-shpyrd logs --build                  # the latest build's output
-shpyrd logs -p run                   # one-off instances started with shpyrd run --detach
+shpyrd logs --project shop -f
 ```
 
-```
-2026-09-22T00:54:24 web.1    | GET / from 10.244.0.5:58732 (request #2)
-2026-09-22T00:54:24 worker.1 | job #3 done in 200ms: "Olá mundo"
-```
+The **Logs** tab streams every instance live. The [Logs](/docs/logs) page covers the log agent, the on-node limits and drains to your log provider.
 
 ## Releases and rollback
 

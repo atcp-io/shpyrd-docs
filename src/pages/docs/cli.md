@@ -27,6 +27,14 @@ description: Every shpyrd command and its flags.
 | `shpyrd members add <project> --user <email>\|--team <name> --role viewer\|developer\|admin` | Grant a role on a project. |
 | `shpyrd members list [project]`, `remove <project> --user\|--team` | List and remove grants. |
 
+## Log drains
+
+| Command | What it does |
+| --- | --- |
+| `shpyrd drains add <url> [--name] [--header "Name: value"]... [--processes web,worker] [--format json\|syslog] --project <slug> \| --cluster` | Forward a project's (or every project's) lines to an HTTPS or syslog receiver (extension `logs-agent`). |
+| `shpyrd drains list [--project \| --cluster]` | Drains with delivery status and last delivery. |
+| `shpyrd drains remove <name> [--project \| --cluster]` | Remove a drain and its stored headers. |
+
 ## Global config vars
 
 | Command | What it does |
