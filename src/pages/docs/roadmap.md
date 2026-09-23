@@ -16,7 +16,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | Platform backup and restore (encrypted, to object storage) | [RFC-0037](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0037-platform-backup-and-restore.md) | proposal |
 | Local names and front door: `*.shpyrd.test` via dnsmasq, an existing Caddy on 443 as the front door | [RFC-0057](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0057-local-names-and-front-door.md) | done |
 | Project identity: display names, `/projects/<slug>` URLs, no "pod" wording | [RFC-0011](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0011-project-identity-and-product-language.md) | done |
-| Global config vars for every project | [RFC-0016](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0016-global-config-vars.md) | proposal |
+| Global config vars for every project | [RFC-0016](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0016-global-config-vars.md) | done |
 | Project quotas | [RFC-0042](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0042-project-quotas.md) | ready to implement |
 | Cost visibility | [RFC-0048](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0048-cost-visibility.md) | ready to implement |
 | Workspaces (grouping of projects) | [RFC-0033](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0033-workspaces.md) | proposal |

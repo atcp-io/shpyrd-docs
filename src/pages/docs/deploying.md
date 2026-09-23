@@ -134,6 +134,23 @@ shpyrd secrets list            # names and when each was last set; values are ne
 
 Every change is a release (`Set DATABASE_URL config var`) and restarts the processes with the new environment. The dashboard's **Config** tab does the same, including pasting `.env` files.
 
+### Global config vars
+
+Settings every project should have (an `OPENAI_API_KEY`, a region) are set once by a platform admin and injected into every process of every project ([RFC-0016](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0016-global-config-vars.md)):
+
+```shell
+shpyrd globals set OPENAI_API_KEY=sk-... REGION=eu
+shpyrd globals unset REGION
+shpyrd globals list            # names and when each was set; values are never shown
+```
+
+Globals come first in the environment: a project's own config var of the same name wins, and variables from attached resources win over both. A change is a **Global config change** release in every project that receives them (the Cluster page's card asks first and says how many). `shpyrd secrets list` and the Config tab show them as *provided by cluster* and mark project vars that override one. A project opts out in `shpyrd.yaml`:
+
+```yaml
+globals: false                       # none of them
+globals: { exclude: [OPENAI_API_KEY] } # all but these
+```
+
 ## Shell and one-off commands
 
 ```shell
