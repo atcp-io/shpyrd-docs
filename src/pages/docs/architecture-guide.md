@@ -69,4 +69,4 @@ examples/hello        example project (Go, web + worker)
 rfcs/                 design documents
 ```
 
-The full design record, including the alternatives considered, is [RFC-0001](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md).
+The full design record, including the alternatives considered, is [RFC-0001](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md).

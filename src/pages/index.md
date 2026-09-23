@@ -37,7 +37,7 @@ Shpyrd turns a Kubernetes cluster into a platform you can `deploy` to: push code
 Requirements: Docker (Docker Desktop with 6-8 GB of memory) and, until binaries are published, Go 1.27 to build the CLI.
 
 ```shell
-git clone https://github.com/atcp-io/shpyrd && cd shpyrd
+git clone https://github.com/shpyrd-io/shpyrd && cd shpyrd
 make cli
 ./bin/shpyrd cluster create        # kind cluster + base stack, 10-20 min the first time
 ./bin/shpyrd cluster trust-ca      # trust the development CA (asks for sudo)
@@ -61,10 +61,10 @@ shpyrd logs -f
 
 ## Status
 
-Shpyrd is pre-alpha. The [MVP](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md) runs on a local kind cluster and is developed in the open; see the [roadmap](/docs/roadmap) for what comes next and [how to contribute](/docs/how-to-contribute).
+Shpyrd is pre-alpha. The [MVP](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md) runs on a local kind cluster and is developed in the open; see the [roadmap](/docs/roadmap) for what comes next and [how to contribute](/docs/how-to-contribute).
 
 ## Getting help
 
-- Bugs, ideas and questions: [GitHub issues](https://github.com/atcp-io/shpyrd/issues).
-- Design changes go through short [RFCs](https://github.com/atcp-io/shpyrd/tree/main/rfcs).
+- Bugs, ideas and questions: [GitHub issues](https://github.com/shpyrd-io/shpyrd/issues).
+- Design changes go through short [RFCs](https://github.com/shpyrd-io/shpyrd/tree/main/rfcs).
 - Community chat: [Discord](https://discord.gg/AxWMXXW7).

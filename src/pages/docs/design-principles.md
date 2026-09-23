@@ -3,7 +3,7 @@ title: Design principles
 description: The choices behind shpyrd and why they were made.
 ---
 
-These principles come from building the MVP and are recorded in more detail in [RFC-0001](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md). {% .lead %}
+These principles come from building the MVP and are recorded in more detail in [RFC-0001](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md). {% .lead %}
 
 ## Zero config for applications
 

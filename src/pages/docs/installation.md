@@ -18,7 +18,7 @@ Recent Kubernetes releases refuse to run on cgroup v1. If Docker Desktop has the
 ## Build the CLI
 
 ```shell
-git clone https://github.com/atcp-io/shpyrd && cd shpyrd
+git clone https://github.com/shpyrd-io/shpyrd && cd shpyrd
 make cli            # -> ./bin/shpyrd
 ./bin/shpyrd --help
 ```

@@ -22,7 +22,7 @@ shpyrd pg delete db --project shop --yes                  # refused while attach
 
 Each database is its own [CloudNativePG](https://cloudnative-pg.io) cluster in the project namespace: streaming replication and failover when `--instances` is 2 or 3, a `db-rw` service for the primary and `db-ro` for replicas, a database `app` owned by user `app`. The instance size sets CPU and memory, with a floor of 256 MiB because PostgreSQL does not start below it; storage grows (`shpyrd pg create` again is not needed, edit the resource) but never shrinks.
 
-Not there yet: backups to object storage and point-in-time recovery, connection pooling and credential rotation ([RFC-0009](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0009-postgres-resource.md)).
+Not there yet: backups to object storage and point-in-time recovery, connection pooling and credential rotation ([RFC-0009](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0009-postgres-resource.md)).
 
 ## Redis and Valkey
 
@@ -33,7 +33,7 @@ shpyrd redis create legacy --project shop --engine redis  # upstream Redis 7
 shpyrd redis cli cache --project shop -- INFO memory
 ```
 
-[Valkey](https://valkey.io) (BSD licensed, protocol compatible) is the default engine; `--engine redis` selects upstream Redis. A store is a single instance run by the shpyrd controller: `maxmemory` is 75% of the size's memory; a **cache** evicts with `allkeys-lru` and loses its content on restart, which is the expected behaviour of a cache; a **persistent** store keeps an append-only file on a volume and refuses writes instead of evicting when full. Persistence cannot change after creation. High availability through an operator comes later ([RFC-0010](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0010-redis-resource.md)).
+[Valkey](https://valkey.io) (BSD licensed, protocol compatible) is the default engine; `--engine redis` selects upstream Redis. A store is a single instance run by the shpyrd controller: `maxmemory` is 75% of the size's memory; a **cache** evicts with `allkeys-lru` and loses its content on restart, which is the expected behaviour of a cache; a **persistent** store keeps an append-only file on a volume and refuses writes instead of evicting when full. Persistence cannot change after creation. High availability through an operator comes later ([RFC-0010](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0010-redis-resource.md)).
 
 ## Attaching
 
