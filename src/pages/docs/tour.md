@@ -9,7 +9,7 @@ Screenshots from a local kind cluster running the three sample projects in `exam
 
 ![Login page](/screenshots/login.png)
 
-With the `auth-local` extension enabled, people sign in with their own email and password on this page, never on a third-party screen; a wrong password is shown right here. The admin token is still accepted for automation, sits behind a small link, and can be switched off. `shpyrd cluster dashboard` opens the dashboard signed in as you through a one-time link, so the token never reaches the browser.
+With the `auth-local` extension enabled, people sign in with their own email and password on this page, never on a third-party screen; a wrong password is shown right here. Company identity providers (Okta or any OpenID Connect issuer) and GitHub or Google appear as buttons. The admin token is still accepted for automation, sits behind a small link, and can be switched off. `shpyrd cluster dashboard` opens the dashboard signed in as you through a one-time link, so the token never reaches the browser.
 
 ## Projects
 
