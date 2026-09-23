@@ -27,6 +27,16 @@ description: Every shpyrd command and its flags.
 | `shpyrd members add <project> --user <email>\|--team <name> --role viewer\|developer\|admin` | Grant a role on a project. |
 | `shpyrd members list [project]`, `remove <project> --user\|--team` | List and remove grants. |
 
+## Sign-in providers
+
+| Command | What it does |
+| --- | --- |
+| `shpyrd auth oidc set --id <id> --label <text> --issuer <url> --client-id <id> --client-secret <secret\|@file>` | Add or update a company identity provider (extension `auth-oidc`); `--scopes` replaces the extra scopes (`-` for none). Prints the redirect URIs to register. |
+| `shpyrd auth oidc list` / `remove <id>` | List or remove providers (roles are kept, they are keyed by email). |
+| `shpyrd auth oidc check <id\|issuer-url>` | Fetch the issuer's discovery document: endpoints, PKCE, scopes, claims, sign-out support. |
+| `shpyrd auth connector add github\|google --client-id ... --client-secret ... [--org] [--hosted-domain]` | GitHub or Google sign-in through the bundled issuer (extension `auth-local`). |
+| `shpyrd auth connector list` / `remove <id>` | List or remove connectors. |
+
 ## Projects
 
 | Command | What it does |

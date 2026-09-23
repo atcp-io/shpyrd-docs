@@ -71,7 +71,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | Sign-in with accounts (Dex, local users) | [RFC-0007](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0007-authentication.md) | done |
 | Teams, roles, RBAC mirror, isolation, audit | [RFC-0008](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0008-teams-roles-and-security.md) | done |
 | Sign-in experience: shpyrd's own sign-in page, local sign-in, sign-out at the issuer | [RFC-0012](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0012-sign-in-experience.md) | done |
-| External identity providers: Okta and any OIDC issuer, GitHub and Google | [RFC-0058](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0058-external-identity-providers.md) | ready to implement |
+| External identity providers: Okta and any OIDC issuer, GitHub and Google | [RFC-0058](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0058-external-identity-providers.md) | done |
 | Email delivery | [RFC-0013](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0013-email-delivery.md) | proposal |
 | Account lifecycle: invitations, reset, verification, lockout | [RFC-0014](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0014-account-lifecycle.md) | proposal |
 | MFA and passkeys | [RFC-0053](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0053-mfa-and-passkeys.md) | ready to implement |
