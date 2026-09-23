@@ -7,7 +7,7 @@ The dashboard is served by the shpyrd server inside the cluster at `https://shpy
 
 ## Signing in
 
-`shpyrd cluster dashboard` opens the dashboard signed in with the admin token; the login page also accepts the token pasted by hand (`shpyrd cluster token`). With the `auth-local` extension enabled, the login page offers **Sign in with email and password** for accounts created with `shpyrd users add` or on the **Users** page; the header shows who is signed in and has a sign-out entry. See [Extensions and sign-in](/docs/extensions).
+`shpyrd cluster dashboard` opens the dashboard signed in with the admin token; the login page also accepts the token pasted by hand (`shpyrd cluster token`). With the `auth-local` extension enabled, the login page asks for the email and password of accounts created with `shpyrd users add` or on the **Users** page; the header shows who is signed in and has a sign-out entry. See [Extensions and sign-in](/docs/extensions).
 
 ## Projects
 
