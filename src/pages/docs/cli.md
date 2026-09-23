@@ -27,6 +27,14 @@ description: Every shpyrd command and its flags.
 | `shpyrd members add <project> --user <email>\|--team <name> --role viewer\|developer\|admin` | Grant a role on a project. |
 | `shpyrd members list [project]`, `remove <project> --user\|--team` | List and remove grants. |
 
+## Global config vars
+
+| Command | What it does |
+| --- | --- |
+| `shpyrd globals set KEY=VALUE...` | Set config vars every project receives (platform admins). A "Global config change" release follows in every project that has not opted out. |
+| `shpyrd globals unset KEY...` | Remove global config vars. |
+| `shpyrd globals list` | Names and when each was set; values are never shown. |
+
 ## Sign-in providers
 
 | Command | What it does |
