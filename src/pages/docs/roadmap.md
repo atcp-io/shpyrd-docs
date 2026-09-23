@@ -14,6 +14,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | Published binaries, images and CI (Homebrew, curl installer, ghcr image) | [RFC-0045](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0045-published-binaries-and-ci.md) | ready to implement |
 | Object storage extension (MinIO locally, S3 on cloud) | [RFC-0046](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0046-object-storage.md) | ready to implement |
 | Platform backup and restore (encrypted, to object storage) | [RFC-0037](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0037-platform-backup-and-restore.md) | proposal |
+| Local names and front door: `*.shpyrd.test` via dnsmasq, an existing Caddy on 443 as the front door | [RFC-0057](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0057-local-names-and-front-door.md) | ready to implement |
 | Project identity: display names, `/projects/<slug>` URLs, no "pod" wording | [RFC-0011](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0011-project-identity-and-product-language.md) | proposal |
 | Global config vars for every project | [RFC-0016](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0016-global-config-vars.md) | proposal |
 | Project quotas | [RFC-0042](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0042-project-quotas.md) | ready to implement |
