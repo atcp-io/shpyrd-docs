@@ -65,9 +65,34 @@ shpyrd cluster create --skip monitoring                    # lighter install, no
 shpyrd cluster create --no-init                            # only the kind cluster
 ```
 
+## Local names and ports
+
+Two choices decide what your URLs look like, and `shpyrd cluster create` detects the fitting ones ([RFC-0057](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0057-local-names-and-front-door.md)):
+
+| | Default | Alternative |
+| --- | --- | --- |
+| **Names** | `*.127.0.0.1.nip.io`: public DNS answers 127.0.0.1, nothing to install (needs internet for name resolution) | `--local-dns` with a domain such as `shpyrd.test`: a dnsmasq rule and a `/etc/resolver/test` file make every `*.test` name resolve to your machine, offline (macOS; one sudo prompt; dnsmasq installed with Homebrew if missing) |
+| **Front door** | kind maps 80/443 to ingress-nginx; certificates from shpyrd's development CA (`cluster trust-ca`) | `--front-door caddy` when a Caddy already serves 443: kind takes high ports, shpyrd writes `~/.shpyrd/caddy/shpyrd.caddy` proxying `*.<domain>` to kind and reloads Caddy; certificates come from Caddy's CA you already trust, URLs carry no port |
+
+When Caddy is detected the CLI asks:
+
+```
+Caddy v2.11.4 is serving port(s) 80 and 443 on this machine.
+Use it as the front door (clean https URLs, certificates from Caddy's CA)? [Y/n]
+```
+
+and, unless `--domain` was given, uses `shpyrd.test` (offering to configure dnsmasq when the name does not resolve yet). The Caddyfile needs one line, `import ~/.shpyrd/caddy/*.caddy`, which the CLI offers to add to the Caddyfile of the running Caddy. The result:
+
+```
+  Dashboard:  https://shpyrd.shpyrd.test
+  Names: dnsmasq (*.shpyrd.test) · Front door: Caddy on 443 -> kind :8080
+```
+
+`--yes` accepts the proposals (CI does this); `--front-door kind` refuses them. Both choices are recorded in the cluster, so `shpyrd cluster init`, `cluster status` and `cluster dashboard` keep them; `cluster destroy` removes the Caddy site and offers to remove the DNS rule if shpyrd wrote it. An existing cluster can switch: `shpyrd cluster init --domain shpyrd.test --front-door caddy` (identity providers then need the new redirect URIs).
+
 ## Trust the development CA
 
-Certificates for `https://<project>.<domain>` are issued by a root CA generated on your machine (`~/.shpyrd/ca/rootCA.pem`) and stored in the cluster. Install it in your operating system trust store once:
+Not needed behind a Caddy front door: Caddy issues the certificates from its own CA (run `caddy trust` once if your browser warns). Otherwise, certificates for `https://<project>.<domain>` are issued by a root CA generated on your machine (`~/.shpyrd/ca/rootCA.pem`) and stored in the cluster. Install it in your operating system trust store once:
 
 ```shell
 shpyrd cluster trust-ca      # asks for sudo (macOS keychain / Linux ca-certificates)
@@ -82,7 +107,8 @@ shpyrd cluster status
 ```
 
 ```
-Profile: local  Version: v0.1.0  Domain: 127.0.0.1.nip.io  Updated: 2026-09-21T22:23:28Z
+Profile: local  Version: v0.1.1  Domain: 127.0.0.1.nip.io  Updated: 2026-09-21T22:23:28Z
+Names: public DNS (127.0.0.1.nip.io) · Front door: kind on 80/443
 
 RUNLEVEL  COMPONENT        STATUS  VERSION  APPLIED
 rc0       monitoring-crds  ready   32.0.0   ...
