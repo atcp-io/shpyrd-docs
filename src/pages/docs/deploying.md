@@ -151,6 +151,41 @@ globals: false                       # none of them
 globals: { exclude: [OPENAI_API_KEY] } # all but these
 ```
 
+## Health checks
+
+shpyrd configures probes automatically ([RFC-0019](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0019-health-checks-and-rollouts.md)). No configuration is needed for the common case:
+
+| Process type | Default probe |
+|---|---|
+| `web` (or any process with a port) | HTTP `GET /` on `PORT` |
+| Any process with `port:` set | TCP on that port |
+| Workers and other processes without a port | None — relies on restart-on-crash |
+
+The deploy waits for each new instance to pass its readiness probe before the old one is removed, so traffic is always served. If a new instance never becomes healthy the rollout stalls, the Activity panel shows the reason (exit code, probe error) and a rollback button; the old instances keep serving.
+
+Override the default or disable checking in `shpyrd.yaml`:
+
+```yaml
+processes:
+  web:
+    healthCheck:
+      path: /healthz          # HTTP GET on PORT; replaces the default /
+      interval: 5s
+      gracePeriod: 30s        # startup time before failures count
+      shutdownDelay: 5s       # drain time before SIGTERM
+  worker:
+    healthCheck:
+      command: [python, -c, "import app; app.is_healthy()"]   # custom command
+  api:
+    healthCheck:
+      tcp: true               # explicit TCP when port: is set
+  batch:
+    healthCheck:
+      disabled: true          # no probe
+```
+
+`shpyrd projects info` shows the health config per process. `shpyrd.yaml` changes take effect on the next deploy.
+
 ## Shell and one-off commands
 
 ```shell
