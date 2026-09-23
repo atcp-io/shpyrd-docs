@@ -38,14 +38,13 @@ Take the [tour](/docs/tour) for every feature with a screenshot.
 
 ## Quick start
 
-Requirements: Docker (Docker Desktop with 6-8 GB of memory) and, until binaries are published, Go 1.27 to build the CLI.
+Requirements: Docker (Docker Desktop with 6-8 GB of memory), macOS or Linux.
 
 ```shell
-git clone https://github.com/shpyrd-io/shpyrd && cd shpyrd
-make cli
-./bin/shpyrd cluster create        # kind cluster + base stack, 10-20 min the first time
-./bin/shpyrd cluster trust-ca      # trust the development CA (asks for sudo)
-./bin/shpyrd cluster dashboard     # opens https://shpyrd.127.0.0.1.nip.io signed in
+brew install shpyrd-io/tap/shpyrd                 # macOS; or: curl -fsSL https://shpyrd.io/install.sh | sh
+shpyrd cluster create        # kind cluster + base stack, 10-20 min the first time
+shpyrd cluster trust-ca      # trust the development CA (asks for sudo)
+shpyrd cluster dashboard     # opens https://shpyrd.127.0.0.1.nip.io signed in
 ```
 
 Then deploy the bundled example, a Go module with a `web` and a `worker` process:

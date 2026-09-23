@@ -8,22 +8,34 @@ Shpyrd ships as a single CLI, `shpyrd`, that installs the platform on a Kubernet
 ## Requirements
 
 - **Docker** (Docker Desktop on macOS/Windows, Docker Engine on Linux). Give it 6-8 GB of memory: the base stack idles around 3 GB and buildpack builds need headroom.
-- **Go 1.27** to build the CLI, until binaries are published.
 - Internet access for the first install (kind node image, Helm charts, buildpacks, ~2 GB) and for name resolution of the default `127.0.0.1.nip.io` domain.
+- macOS or Linux, Intel or ARM. On Windows, use WSL 2.
 
 {% callout type="warning" title="Docker Desktop and cgroup v1" %}
 Recent Kubernetes releases refuse to run on cgroup v1. If Docker Desktop has the deprecated cgroup v1 setting enabled (`DeprecatedCgroupv1` in its settings), `shpyrd cluster create` detects it, applies a kubelet override and warns; switching Docker Desktop to cgroup v2 is recommended.
 {% /callout %}
 
-## Build the CLI
+## Install the CLI
+
+macOS, with Homebrew:
 
 ```shell
-git clone https://github.com/shpyrd-io/shpyrd && cd shpyrd
-make cli            # -> ./bin/shpyrd
-./bin/shpyrd --help
+brew install shpyrd-io/tap/shpyrd
 ```
 
-Add `./bin` to your `PATH` or copy the binary somewhere on it.
+macOS or Linux, with the install script (downloads the latest [release](https://github.com/shpyrd-io/shpyrd/releases), verifies its SHA-256 checksum and installs into `/usr/local/bin` or `~/.local/bin`):
+
+```shell
+curl -fsSL https://shpyrd.io/install.sh | sh
+```
+
+`SHPYRD_VERSION=v0.1.0` pins a version and `SHPYRD_INSTALL_DIR=...` picks the directory. The archives and checksums are also on the release page for a manual install. Check with `shpyrd version`.
+
+Every release also publishes the server image `ghcr.io/shpyrd-io/shpyrd-server:<version>` for `linux/amd64` and `linux/arm64`; the CLI installs the image of its own version, so CLI and server always match. Upgrading is `brew upgrade shpyrd` (or re-running the script) followed by `shpyrd cluster init`.
+
+{% callout title="Building from source" %}
+Developers build the CLI with `make cli` (Go 1.27) after cloning [shpyrd-io/shpyrd](https://github.com/shpyrd-io/shpyrd); a development build installs the latest released server image unless told otherwise with `--set SHPYRD_SERVER_IMAGE=...` (see the [contributing guide](/docs/how-to-contribute)).
+{% /callout %}
 
 ## Create a local cluster
 
@@ -70,7 +82,7 @@ shpyrd cluster status
 ```
 
 ```
-Profile: local  Version: dev  Domain: 127.0.0.1.nip.io  Updated: 2026-09-21T22:23:28Z
+Profile: local  Version: v0.1.0  Domain: 127.0.0.1.nip.io  Updated: 2026-09-21T22:23:28Z
 
 RUNLEVEL  COMPONENT        STATUS  VERSION  APPLIED
 rc0       monitoring-crds  ready   32.0.0   ...
