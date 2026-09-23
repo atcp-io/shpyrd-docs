@@ -31,9 +31,10 @@ description: Every shpyrd command and its flags.
 
 | Command | What it does |
 | --- | --- |
-| `shpyrd projects create <name>` | Create the project. `--domain` extra hostnames, `--save` writes `shpyrd.yaml`. (`shpyrd apps` still works as an alias.) |
-| `shpyrd projects list` | Table of projects: phase, release, URL, age. |
-| `shpyrd projects info <name>` | Phase and message, URL, build digest, source, processes (with sizes and failing reasons), recent releases, and every resource of the project (app, attached resources, volumes). |
+| `shpyrd projects create "<name>"` | Create the project. The name is free text ("My Shop"); its **slug** (`my-shop`) is derived from it and identifies the project in `--project`, URLs and the hostname. `--slug` chooses it, `--domain` adds hostnames, `--save` writes `shpyrd.yaml`. (`shpyrd apps` still works as an alias.) |
+| `shpyrd projects rename <slug> "<name>"` | Change the display name. The slug never changes. |
+| `shpyrd projects list` | Table of projects: slug, name, phase, release, URL, age. |
+| `shpyrd projects info <slug>` | Phase and message, URL, build digest, source, processes (with sizes and failing reasons), recent releases, and every resource of the project (app, attached resources, volumes). |
 | `shpyrd projects destroy <name>` | Delete the project and its namespace (`--yes`). |
 
 ## Deploying and running

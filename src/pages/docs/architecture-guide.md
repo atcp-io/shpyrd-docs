@@ -38,7 +38,7 @@ Projects are `App` custom resources living in their own namespace (`app-<name>`)
 - one **Deployment per process type**, sized (default 1 CPU / 512 MiB), `web` running the image entrypoint and other types `/cnb/process/<type>`, with `PORT` injected and the config var Secret mounted as environment;
 - a Service per process with a port and an Ingress with a cert-manager certificate for `web`.
 
-Status is derived from the kpack Image or build Job (build progress and failures), the Deployments (instances updated and ready) and the pods (instances that cannot start, with the container's reason). A **release** is recorded whenever the running image or the configuration hash changes; its config vars are snapshotted into a Secret, and a rollback request (annotation) restores that snapshot before pinning the release's build. Status updates use optimistic locking so a reconcile working from a stale cache never overwrites a newer state.
+Status is derived from the kpack Image or build Job (build progress and failures), the Deployments (instances updated and ready) and the pods behind them (instances that cannot start, with the container's reason). A **release** is recorded whenever the running image or the configuration hash changes; its config vars are snapshotted into a Secret, and a rollback request (annotation) restores that snapshot before pinning the release's build. Status updates use optimistic locking so a reconcile working from a stale cache never overwrites a newer state.
 
 ## The server
 

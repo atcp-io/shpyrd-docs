@@ -8,8 +8,8 @@ The CLI talks to your cluster with your kubeconfig; the only call that reaches t
 ## Create a project
 
 ```shell
-shpyrd projects create my-service          # namespace app-my-service + App resource
-shpyrd projects create my-service --save   # also writes shpyrd.yaml (app: my-service) in the current directory
+shpyrd projects create "My Service"        # slug my-service: namespace app-my-service + App resource
+shpyrd projects create "My Service" --save # also writes shpyrd.yaml (project: my-service) in the current directory
 ```
 
 Names are lowercase letters, digits and dashes (max 40 characters) and become the hostname: `https://my-service.<domain>`.
