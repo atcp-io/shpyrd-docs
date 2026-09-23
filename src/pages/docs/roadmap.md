@@ -11,7 +11,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | --- | --- | --- |
 | Local platform: installer, App controller, CLI, dashboard | [RFC-0001](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md) | done |
 | Extensions enabled per cluster | [RFC-0002](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0002-extension-model.md) | done |
-| Published binaries, images and CI (Homebrew, curl installer, ghcr image) | [RFC-0045](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0045-published-binaries-and-ci.md) | ready to implement |
+| Published binaries, images and CI (Homebrew, curl installer, ghcr image) | [RFC-0045](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0045-published-binaries-and-ci.md) | done |
 | Object storage extension (MinIO locally, S3 on cloud) | [RFC-0046](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0046-object-storage.md) | ready to implement |
 | Platform backup and restore (encrypted, to object storage) | [RFC-0037](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0037-platform-backup-and-restore.md) | proposal |
 | Local names and front door: `*.shpyrd.test` via dnsmasq, an existing Caddy on 443 as the front door | [RFC-0057](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0057-local-names-and-front-door.md) | ready to implement |
