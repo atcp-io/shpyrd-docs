@@ -39,7 +39,7 @@ A fresh cluster has no teams or members, and every signed-in user is a platform 
 
 ## Kubernetes RBAC mirror
 
-For every project namespace the controller keeps `RoleBinding`s (`shpyrd-viewer`, `shpyrd-developer`, `shpyrd-admin`) bound to the fixed ClusterRoles `shpyrd-project-*`, with the users (by email) and groups holding each role; platform roles become `ClusterRoleBinding`s. The Kubernetes roles grant the same verbs the dashboard allows (developers can update the App and exec into pods; config var Secrets stay write-only), never more than shpyrd itself has.
+For every project namespace the controller keeps `RoleBinding`s (`shpyrd-viewer`, `shpyrd-developer`, `shpyrd-admin`) bound to the fixed ClusterRoles `shpyrd-project-*`, with the users (by email) and groups holding each role; platform roles become `ClusterRoleBinding`s. The Kubernetes roles grant the same verbs the dashboard allows (developers can update the App and open shells in its instances; config var Secrets stay write-only), never more than shpyrd itself has.
 
 Configure your API server with the same OIDC issuer (`--oidc-issuer-url`, `--oidc-username-claim=email`, `--oidc-groups-claim=groups`) and `kubectl` users get exactly the dashboard's view. The local kind cluster is not configured this way out of the box; the bindings are still created and visible with `kubectl get rolebindings -n app-<project>`.
 
@@ -47,7 +47,7 @@ Configure your API server with the same OIDC issuer (`--oidc-issuer-url`, `--oid
 
 Every project namespace gets:
 
-- **A network policy.** Ingress only from the project's own pods, the ingress controller (your URL) and the monitoring namespace (metrics). Egress to the project, to platform namespaces (DNS, the registry, bound services) and to the internet, never to other projects. Projects talk to each other only through what a binding exposes.
+- **A network policy.** Ingress only from the project's own instances, the ingress controller (your URL) and the monitoring namespace (metrics). Egress to the project, to platform namespaces (DNS, the registry, bound services) and to the internet, never to other projects. Projects talk to each other only through what a binding exposes.
 - **Pod security.** The `restricted` Pod Security Standard is applied in warn and audit mode, and shpyrd runs every process (and every `shpyrd run` instance) as a non-root user with all capabilities dropped and the runtime's default seccomp profile. Buildpack images comply already; a Dockerfile needs a numeric `USER` (`USER 1000`): a named user cannot be verified by Kubernetes and is refused with an explanation, as is an image running as root.
 - **Hardened dashboard.** HttpOnly session cookies with CSRF tokens, security headers with a strict Content Security Policy, and a rate limit on sign-in.
 
@@ -62,7 +62,7 @@ The token created at install time is a shared credential with full platform-admi
 
 ## Audit trail
 
-Every mutation is recorded as `{who, what, target, detail, when, from, via}`: deploys, rollbacks, scaling and resizing, config var changes (names, never values), shells and one-off commands, volume and membership changes, project creation and destruction, from the dashboard and API (`via: api`, with the signed-in user) and from the CLI (`via: cli`, with the local user and host). The project page shows the recent actions; `GET /api/apps/{ns}/{name}/audit` returns them. Entries are Kubernetes Events, kept for the API server's event TTL (an hour by default) until durable storage arrives.
+Every mutation is recorded as `{who, what, target, detail, when, from, via}`: deploys, rollbacks, scaling and resizing, config var changes (names, never values), shells and one-off commands, volume and membership changes, project creation and destruction, from the dashboard and API (`via: api`, with the signed-in user) and from the CLI (`via: cli`, with the local user and host). The project page shows the recent actions; `GET /api/projects/{slug}/audit` returns them. Entries are Kubernetes Events, kept for the API server's event TTL (an hour by default) until durable storage arrives.
 
 ## Not yet
 

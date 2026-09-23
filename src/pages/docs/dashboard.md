@@ -36,7 +36,7 @@ Modelled on what Heroku, Fly and Render show for an application:
 | Instances | running instances per process type (step chart) |
 | CPU | usage as a percentage of each process' allocation, averaged over its instances; 100% means every instance saturating its CPU |
 | Memory | working set as a percentage of each process' allocation |
-| Network | pod traffic in and out |
+| Network | instance traffic in and out |
 
 Orange dashed lines mark releases; a red line marks 100%. Ranges: last hour, 6 hours, 24 hours, 7 days. 100% is the process' instance size (its allocation); shared sizes can read above 100% while bursting.
 

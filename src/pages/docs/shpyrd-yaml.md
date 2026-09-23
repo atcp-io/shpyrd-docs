@@ -44,7 +44,7 @@ domains:
 
 | Field | Meaning |
 | --- | --- |
-| `project` | Project name; used when `--project` is not given. Created with `shpyrd projects create <name>` (`--save` writes this file). `app` is accepted as an alias. |
+| `project` | The project's slug (`my-shop`, not "My Shop"); used when `--project` is not given. `shpyrd projects create "<name>" --save` writes this file. `app` is accepted as an alias. |
 | `processes.<type>.port` | Port the process listens on. `web` defaults to 8080 and is published through the URL; other types get no port unless set. `PORT` is injected. |
 | `processes.<type>.replicas` | Pin the number of instances. Without it, `shpyrd scale` values are kept across deploys (default 1). |
 | `processes.<type>.size` | Instance size from the cluster catalog (`shpyrd sizes list`): `shared-*` sizes get a guaranteed CPU share that can burst up to 4×, `dedicated-*` sizes get whole cores. Default: the catalog default (`shared-s`, 0.5 CPU / 64 MiB out of the box). Changing it is a release. |
