@@ -46,3 +46,7 @@ Manifests under `deploy/` are embedded in the binaries: rebuild the CLI after ed
 ## Documentation
 
 This site lives in [atcp-io/shpyrd-docs](https://github.com/atcp-io/shpyrd-docs) (Next.js + Markdoc). Pages are Markdown files under `src/pages/docs`; the navigation is in `src/components/Layout.jsx`. Run `npm install && npm run dev` to preview.
+
+## Support the project
+
+Shpyrd is free and open source. If it saves you time, you can support its development with a donation: [donate.stripe.com/9B63cxfbwg8H31OgPX2ZO01](https://donate.stripe.com/9B63cxfbwg8H31OgPX2ZO01). Thank you.

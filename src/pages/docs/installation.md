@@ -3,7 +3,7 @@ title: Installation
 description: Create a local cluster with the shpyrd base stack, or install it on an existing Kubernetes cluster.
 ---
 
-Shpyrd ships as a single CLI, `shpyrd`, that creates the cluster and installs everything the platform needs. No `kubectl`, `helm`, `kustomize` or `flux` binaries are required. {% .lead %}
+Shpyrd ships as a single CLI, `shpyrd`, that installs the platform on a Kubernetes cluster: a local kind cluster it creates for you, or a cluster you already have. {% .lead %}
 
 ## Requirements
 
