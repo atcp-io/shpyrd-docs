@@ -20,7 +20,7 @@ auth-local  enabled   dex        Sign in with email and password: a bundled Dex 
 
 Enabling installs the extension's component with the same runlevel installer as the base stack (ordering, readiness waits, install record) and restarts the server with the extension; the choice is recorded in the cluster, so `shpyrd cluster init` and `shpyrd cluster status` keep it. Disabling removes the component and is refused while resources of the extension still exist. The **Cluster** page lists every extension with its state.
 
-Extensions contribute an installer component, resource types with controllers, API routes, CLI commands and login providers through a few small Go interfaces ([RFC-0002](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0002-extension-model.md)). Databases (Postgres, Redis) and shared storage arrive as extensions.
+Extensions contribute an installer component, resource types with controllers, API routes, CLI commands and login providers through a few small Go interfaces ([RFC-0002](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0002-extension-model.md)). Databases (Postgres, Redis) and shared storage arrive as extensions.
 
 ## Signing in with an account
 
@@ -39,7 +39,7 @@ The login page then offers **Sign in with email and password** next to the token
 ### How it works
 
 - The extension installs [Dex](https://dexidp.io), an OpenID Connect issuer, at `https://auth.<domain>` with a certificate from the cluster issuer. Accounts are Dex objects in the cluster (bcrypt hashes), so they survive restarts, upgrades and even disabling the extension.
-- The shpyrd server is an OpenID Connect relying party: authorization code flow with PKCE, an HttpOnly session cookie, a CSRF token on every change, sessions that expire after 12 hours idle or 7 days. Because the relying party is generic, a company identity provider (Okta, Google, GitHub through Dex) is configuration, not code ([RFC-0007](https://github.com/atcp-io/shpyrd/blob/main/rfcs/0007-authentication.md)).
+- The shpyrd server is an OpenID Connect relying party: authorization code flow with PKCE, an HttpOnly session cookie, a CSRF token on every change, sessions that expire after 12 hours idle or 7 days. Because the relying party is generic, a company identity provider (Okta, Google, GitHub through Dex) is configuration, not code ([RFC-0007](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0007-authentication.md)).
 - The CLI keeps using your kubeconfig; cluster operations are not affected by dashboard accounts.
 
 {% callout title="Local cluster note" %}

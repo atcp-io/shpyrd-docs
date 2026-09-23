@@ -60,7 +60,7 @@ export function Hero() {
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
                 <Button href="/#quick-start">Get started</Button>
-                <Button href="https://github.com/atcp-io/shpyrd" variant="secondary">
+                <Button href="https://github.com/shpyrd-io/shpyrd" variant="secondary">
                   View on GitHub
                 </Button>
               </div>

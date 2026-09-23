@@ -3,21 +3,21 @@ title: How to contribute
 description: Set up a development environment, find something to work on and send a change.
 ---
 
-Shpyrd is developed in the open at [github.com/atcp-io/shpyrd](https://github.com/atcp-io/shpyrd) under the MPL-2.0 license. Issues, ideas and pull requests are welcome. {% .lead %}
+Shpyrd is developed in the open at [github.com/shpyrd-io/shpyrd](https://github.com/shpyrd-io/shpyrd) under the MPL-2.0 license. Issues, ideas and pull requests are welcome. {% .lead %}
 
 ## Where to start
 
 - **Try it and report.** Run the [quick start](/) on your machine and open an issue for anything confusing, slow or broken. UX feedback is as valuable as code at this stage.
-- **Pick an issue.** The [issue tracker](https://github.com/atcp-io/shpyrd/issues) has bugs and roadmap items. Comment on one before starting so work is not duplicated.
+- **Pick an issue.** The [issue tracker](https://github.com/shpyrd-io/shpyrd/issues) has bugs and roadmap items. Comment on one before starting so work is not duplicated.
 - **Propose a change.** Small fixes go straight to a pull request. Anything that changes behaviour or architecture starts as a short RFC (`rfcs/0000-template.md`) or an issue describing the problem first.
-- **Talk.** Questions and discussions happen on [Discord](https://discord.gg/AxWMXXW7); the [code of conduct](https://github.com/atcp-io/shpyrd/blob/main/CODE_OF_CONDUCT.md) applies everywhere.
+- **Talk.** Questions and discussions happen on [Discord](https://discord.gg/AxWMXXW7); the [code of conduct](https://github.com/shpyrd-io/shpyrd/blob/main/CODE_OF_CONDUCT.md) applies everywhere.
 
 ## Development environment
 
 Docker, Go 1.27 and Node.js 22 (for the dashboard).
 
 ```shell
-git clone https://github.com/atcp-io/shpyrd && cd shpyrd
+git clone https://github.com/shpyrd-io/shpyrd && cd shpyrd
 make cli                      # ./bin/shpyrd
 make dev-cluster              # kind cluster with everything except the shpyrd server
 make dev-deploy               # build the server image, load it into kind, apply the shpyrd component
@@ -45,7 +45,7 @@ Manifests under `deploy/` are embedded in the binaries: rebuild the CLI after ed
 
 ## Documentation
 
-This site lives in [atcp-io/shpyrd-docs](https://github.com/atcp-io/shpyrd-docs) (Next.js + Markdoc). Pages are Markdown files under `src/pages/docs`; the navigation is in `src/components/Layout.jsx`. Run `npm install && npm run dev` to preview.
+This site lives in [shpyrd-io/shpyrd-docs](https://github.com/shpyrd-io/shpyrd-docs) (Next.js + Markdoc). Pages are Markdown files under `src/pages/docs`; the navigation is in `src/components/Layout.jsx`. Run `npm install && npm run dev` to preview.
 
 ## Support the project
 

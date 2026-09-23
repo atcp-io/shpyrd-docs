@@ -17,7 +17,7 @@ metadata:
   namespace: app-hello-world
 spec:
   source:
-    git: { url: https://github.com/atcp-io/shpyrd, revision: main }
+    git: { url: https://github.com/shpyrd-io/shpyrd, revision: main }
     subPath: examples/hello
   processes:
     web: { port: 8080, replicas: 3 }
