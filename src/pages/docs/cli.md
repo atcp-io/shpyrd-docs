@@ -10,11 +10,12 @@ description: Every shpyrd command and its flags.
 | Command | What it does |
 | --- | --- |
 | `shpyrd cluster create` | Create a kind cluster and install the base stack. `--name`, `--workers`, `--image`, `--http-port`, `--https-port`, `--domain`, `--profile`, `--skip`, `--only`, `--set SHPYRD_X=y`, `--no-init`. |
-| `shpyrd cluster init` | Install or upgrade the base stack on the current context. Same profile flags; `--yes` for non-kind contexts. Re-running is idempotent. |
+| `shpyrd cluster init` | Install or upgrade the base stack on the current context. Same profile flags; `--yes` for non-kind contexts. Cloud profiles: `--profile oci`, `--set SHPYRD_ACME_EMAIL=...`, `--set SHPYRD_LB_IP=<reserved address>`, `--dns oci --dns-compartment --dns-tenancy --dns-region` with `--dns-user --dns-key-file` or `--dns-auth workload`, `--internal-lb-subnet <ocid>`, `--platform-exposure internal`, `--registry-host <host> --registry-user --registry-token-file` for a provider registry. Explicit settings are recorded, so re-runs need no flags. |
+| `shpyrd cluster registry` | The image registry: mode, health, storage used, images held, garbage collection and certificate. `registry gc` reclaims deleted images now (`--wait`). |
 | `shpyrd cluster status` | Health of every component, with versions and install times. Exit code 1 when something is not ready. |
 | `shpyrd cluster dashboard` | Open the dashboard in the browser, signed in as you through a one-time login ticket (60 s). `--no-open` prints the URL and the link. |
 | `shpyrd cluster token` | Print the admin token (Secret `shpyrd-system/shpyrd-admin-token`). `--rotate` replaces it, `--disable`/`--enable` switch it off and on (disable needs a login provider and a platform-admin team). |
-| `shpyrd cluster trust-ca` | Install the development root CA in the OS trust store (`--ca-dir`). |
+| `shpyrd cluster trust-ca` | Install the platform CA in the OS trust store: the development CA (`--ca-dir`) for local clusters, the cluster's own CA when `--context` points at a cloud cluster. Alias `trust`. |
 | `shpyrd cluster export` | Render the base stack manifests to a directory for GitOps tooling (`-o`, profile flags). |
 | `shpyrd cluster destroy` | Delete the kind cluster (`--name`, `--yes`). |
 | `shpyrd extensions list` | Extensions known to this build and whether they are enabled on the cluster. |
@@ -57,7 +58,7 @@ description: Every shpyrd command and its flags.
 
 | Command | What it does |
 | --- | --- |
-| `shpyrd projects create "<name>"` | Create the project. The name is free text ("My Shop"); its **slug** (`my-shop`) is derived from it and identifies the project in `--project`, URLs and the hostname. `--slug` chooses it, `--domain` adds hostnames, `--save` writes `shpyrd.yaml`. (`shpyrd apps` still works as an alias.) |
+| `shpyrd projects create "<name>"` | Create the project. The name is free text ("My Shop"); its **slug** (`my-shop`) is derived from it and identifies the project in `--project`, URLs and the hostname. `--slug` chooses it, `--domain` adds custom domains, `--save` writes `shpyrd.yaml`. (`shpyrd apps` still works as an alias.) |
 | `shpyrd projects rename <slug> "<name>"` | Change the display name. The slug never changes. |
 | `shpyrd projects list` | Table of projects: slug, name, phase, release, URL, age. |
 | `shpyrd projects info <slug>` | Phase and message, URL, build digest, source, processes (with sizes and failing reasons), recent releases, and every resource of the project (app, attached resources, volumes). |
@@ -91,13 +92,18 @@ description: Every shpyrd command and its flags.
 | `shpyrd logs` | Tail logs of every instance (`web.1`, `worker.2`...). `-f` follow, `-p <process>`, `-n <lines>`, `--build` for the latest build output. |
 | `shpyrd releases` | Release history with digests and descriptions. |
 | `shpyrd rollback [N]` | Re-release N (default: the previous release) with its build and config vars. Refused while another release is rolling out unless `--force`; `--no-wait`. |
+| `shpyrd redeploy` | Try the current release again without a new release: new instances of it, or, after a failed build or with `--rebuild`, the same source built again. `--no-wait`. |
+| `shpyrd domains add <host>` | Serve the project at a hostname you own; prints the DNS record to create (CNAME to the project hostname, or A to the front door) and waits until it serves (`--no-wait`). |
+| `shpyrd domains list`, `rm <host>` | Custom domains with DNS and certificate state; stop serving one. |
+| `shpyrd exposure internal\|external` | Which front door serves the project on cloud profiles (public or private load balancer). Release-free. |
 | `shpyrd open` | Open the project URL in the browser. |
 
 ## Where things are
 
 | | |
 | --- | --- |
-| `~/.shpyrd/ca/` | development root CA (`rootCA.pem`, key) |
+| `~/.shpyrd/ca/` | development root CA (`rootCA.pem`, key); `~/.shpyrd/clusters/<name>/` the CA fetched from a cloud cluster |
 | `~/.kube/config` | kind writes the `kind-shpyrd` context here |
-| namespace `shpyrd-system` | server, registry, admin token, install record, sessions mirror, Dex and its accounts when `auth-local` is enabled |
-| namespace `app-<name>` | one per project (label `shpyrd.io/project`): App, Volumes and their claims, Deployments, Services, Ingress, kpack Image and Builds or BuildKit Jobs, config var Secret, `<app>-bindings` and release snapshots |
+| namespace `shpyrd-system` | server, registry (with its credential and certificate), node trust DaemonSet, ExternalDNS, admin token, install record, sessions mirror, Dex and its accounts when `auth-local` is enabled |
+| namespace `app-<name>` | one per project (label `shpyrd.io/project`): App, Volumes and their claims, Deployments, Services, Ingress and one Certificate per host that needs one, kpack Image and Builds or BuildKit Jobs, config var Secret, `<app>-bindings` and release snapshots |
+| `contrib/oci/` | Terraform for the Oracle Cloud network and cluster, `kubeconfig.sh`, `tunnel.sh` |

@@ -3,7 +3,7 @@ title: Installation
 description: Create a local cluster with the shpyrd base stack, or install it on an existing Kubernetes cluster.
 ---
 
-Shpyrd ships as a single CLI, `shpyrd`, that installs the platform on a Kubernetes cluster: a local kind cluster it creates for you, or a cluster you already have. {% .lead %}
+Shpyrd ships as a single CLI, `shpyrd`, that installs the platform on a Kubernetes cluster: a local kind cluster it creates for you, or a cluster you already have - on Oracle Cloud today ([Oracle Cloud (OKE)](/docs/oracle-cloud)), other providers as their profiles arrive. This page covers the local cluster and what every profile shares. {% .lead %}
 
 ## Requirements
 
@@ -48,8 +48,8 @@ This runs [kind](https://kind.sigs.k8s.io) as a library to create a two-node clu
 | Level | Components |
 | --- | --- |
 | rc0 | Prometheus Operator CRDs |
-| rc1 | cert-manager |
-| rc2 | development CA `ClusterIssuer`, trust-manager, ingress-nginx (host ports 80/443), in-cluster registry |
+| rc1 | cert-manager, the registry credential |
+| rc2 | development CA `ClusterIssuer`, trust-manager, ingress-nginx (host ports 80/443), the in-cluster registry (TLS from the CA) and the node trust for it |
 | rc3 | kpack with the Paketo buildpacks builder, kube-prometheus-stack + Grafana |
 | rc4 | shpyrd server (API, App controller, dashboard) |
 
@@ -90,7 +90,7 @@ and, unless `--domain` was given, uses `shpyrd.test` (offering to configure dnsm
 
 `--yes` accepts the proposals (CI does this); `--front-door kind` refuses them. Both choices are recorded in the cluster, so `shpyrd cluster init`, `cluster status` and `cluster dashboard` keep them; `cluster destroy` removes the Caddy site and offers to remove the DNS rule if shpyrd wrote it. An existing cluster can switch: `shpyrd cluster init --domain shpyrd.test --front-door caddy` (identity providers then need the new redirect URIs).
 
-## Trust the development CA
+## Trust the platform CA
 
 Not needed behind a Caddy front door: Caddy issues the certificates from its own CA (run `caddy trust` once if your browser warns). Otherwise, certificates for `https://<project>.<domain>` are issued by a root CA generated on your machine (`~/.shpyrd/ca/rootCA.pem`) and stored in the cluster. Install it in your operating system trust store once:
 
@@ -99,6 +99,8 @@ shpyrd cluster trust-ca      # asks for sudo (macOS keychain / Linux ca-certific
 ```
 
 Firefox keeps its own store: enable `security.enterprise_roots.enabled` in `about:config` or import the certificate.
+
+Cloud clusters generate their own platform CA at install; it signs the in-cluster registry and the platform's internal endpoints, never the public hostnames (those come from Let's Encrypt). `shpyrd cluster trust-ca --context <cluster>` fetches and installs that CA when you need to talk to the registry from your machine.
 
 ## Check the installation
 
@@ -126,7 +128,7 @@ Endpoints on the default domain:
 
 - `https://shpyrd.127.0.0.1.nip.io` — dashboard (`shpyrd cluster dashboard` opens it signed in; `shpyrd cluster token` prints the admin token)
 - `https://grafana.127.0.0.1.nip.io` — Grafana (`admin` / `shpyrd` on the local profile)
-- `localhost:30050` — the in-cluster registry, for pushing images from your machine
+- `10.96.0.50:5000` — the in-cluster registry, inside the cluster only (`shpyrd cluster registry` shows its state)
 
 ## Install on an existing cluster
 
@@ -136,20 +138,21 @@ The installer works against any kubeconfig context:
 shpyrd cluster init --context my-cluster --profile local --domain apps.example.test --yes
 ```
 
-`--yes` is required for contexts that do not look like kind clusters. Only the `local` profile exists today; it assumes ingress-nginx can bind host ports on a node labelled `ingress-ready=true` and that the service subnet is `10.96.0.0/16` (the registry uses the fixed ClusterIP `10.96.0.50`). Cloud profiles (AWS first) are on the [roadmap](/docs/roadmap).
+`--yes` is required for contexts that do not look like kind clusters. The `local` profile assumes ingress-nginx can bind host ports on a node labelled `ingress-ready=true` and that the service subnet is `10.96.0.0/16` (the registry uses the fixed ClusterIP `10.96.0.50`). For a managed Kubernetes cluster use a cloud profile: [Oracle Cloud (OKE)](/docs/oracle-cloud) today.
 
 ## Environment profiles
 
 A **profile** describes the environment the base stack is built for and therefore how load balancing, DNS, TLS and the registry are provided:
 
-| | `local` (today) | `aws` (planned) |
-| --- | --- | --- |
-| Load balancer | kind host ports 80/443 | AWS Load Balancer Controller |
-| DNS | `*.127.0.0.1.nip.io` wildcard | Route53 via ExternalDNS |
-| TLS | development CA issued by cert-manager | ACM Private CA / Let's Encrypt |
-| Registry | in-cluster `registry:3` | ECR |
+| | `local` | `oci` (Oracle Cloud) | `aws` (planned) |
+| --- | --- | --- | --- |
+| Load balancer | kind host ports 80/443, or your Caddy | OCI flexible load balancer on a reserved address; a private one for internal projects | AWS Load Balancer Controller |
+| DNS | `*.127.0.0.1.nip.io` or dnsmasq (`*.shpyrd.test`) | a wildcard record you create, or a zone in OCI DNS managed by ExternalDNS | Route 53 via ExternalDNS |
+| TLS | development CA issued by cert-manager | Let's Encrypt (one wildcard with a DNS provider); the platform CA for the registry | Let's Encrypt |
+| Registry | in-cluster, TLS from the CA | in-cluster, TLS from the CA; OCIR with `--registry-host` | in-cluster; ECR with `--registry-host` |
+| Isolation | kindnet enforces `NetworkPolicy` | Calico in policy-only mode | the VPC CNI's policy agent |
 
-The dashboard's cluster page shows the installed profile.
+The dashboard's cluster page shows the installed profile, and the install record keeps every choice so `cluster init` re-runs need no flags.
 
 ## Export the manifests
 

@@ -33,7 +33,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | Private repositories (tokens, deploy keys) | [RFC-0017](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0017-git-credentials.md) | proposal |
 | Auto-deploy on push (webhooks, polling) | [RFC-0018](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0018-repository-monitoring.md) | proposal |
 | GitHub App: connect once, pick repositories, statuses | [RFC-0054](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0054-github-app.md) | ready to implement |
-| Health checks and zero-downtime rollouts | [RFC-0019](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0019-health-checks-and-rollouts.md) | proposal |
+| Health checks and zero-downtime rollouts | [RFC-0019](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0019-health-checks-and-rollouts.md) | done |
 | Autoscaling mode (min/max, HPA, KEDA) | [RFC-0047](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0047-autoscaling.md) | ready to implement |
 | Maintenance mode | [RFC-0020](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0020-maintenance-mode.md) | proposal |
 | Run history and scheduled tasks | [RFC-0024](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0024-runs-and-scheduled-tasks.md) | proposal |
@@ -86,9 +86,12 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 
 | Item | RFC | Status |
 | --- | --- | --- |
-| Domains and certificates (wildcards, custom domains, Let's Encrypt) | [RFC-0034](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0034-domains-and-certificates.md) | proposal |
-| AWS profile (EKS) | [RFC-0035](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0035-aws-profile.md) | proposal |
-| DNS providers (Route53, Cloudflare) and internal/external load balancers | [RFC-0036](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0036-dns-providers-and-exposure.md) | proposal |
+| Cloud profiles: Oracle Cloud (OKE) with Terraform for the infrastructure, network policy enforcement | [RFC-0035](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0035-cloud-profiles.md) | done (OKE); AWS proposal |
+| In-cluster registry with TLS on every profile, garbage collection, Registry card | [RFC-0059](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0059-in-cluster-registry-on-cloud.md) | done |
+| DNS providers: automatic records and one wildcard certificate (OCI DNS; Route 53 and Cloudflare with their profiles) | [RFC-0061](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0061-dns-providers.md) | done (OCI DNS) |
+| Front doors: internal and external load balancers, exposure per project | [RFC-0036](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0036-load-balancer-exposure.md) | done |
+| Custom domains: CNAME or A to the project, per-host certificates | [RFC-0034](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0034-domains-and-certificates.md) | done |
+| Volumes on cloud profiles: storage classes, provider minimums, snapshots, detached disks | [RFC-0060](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0060-volumes-on-cloud-profiles.md) | proposal |
 
 ## Decided against, for now
 
