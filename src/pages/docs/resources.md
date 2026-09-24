@@ -51,9 +51,36 @@ The rules are explained where they bite: `shpyrd scale web=3` on a process with 
 
 ### Size and status
 
-`shpyrd volumes list` shows the requested size, the mode, the status (`Pending` until a process mounts it on clusters that bind lazily, then `Bound`, or `Failed` with the reason) and what mounts it. Volumes only grow: `resize` expands the claim when the storage class allows expansion and explains when it does not (kind's `standard` class does not). The access mode and storage class cannot change after creation.
+`shpyrd volumes list` shows the size, the mode, the status (`Pending: created; the disk is provisioned when a process mounts it` on clusters that bind lazily, then `Bound`, or `Failed` with the reason) and what mounts it. Volumes only grow: `resize` expands the claim when the storage class allows expansion and explains when it does not (kind's `standard` class does not). The access mode and storage class cannot change after creation.
+
+Any image user can write to a mounted volume: the platform hands the disk to a group every container in the instance belongs to, so a Dockerfile `USER` or a buildpack's non-root user needs no `chown` step.
 
 On the local profile the bytes live on the kind node, so `shpyrd cluster destroy` deletes them along with everything else. Cloud profiles keep disks independent of nodes.
+
+### Volumes on Oracle Cloud
+
+The `oci` profile puts volumes on Block Volume (`oci-bv`, balanced performance, expansion allowed) and knows Oracle's rules so they do not surprise you:
+
+- **Disks start at 50 GB.** A request below that is created at 50Gi and the command says so: `Note: Oracle Cloud block volumes start at 50Gi: created at 50Gi instead of 1Gi`. The dashboard's size field says it up front. The same applies to a Postgres or Redis data volume, which then shows `50Gi (5Gi requested; provider minimum)`.
+- **The disk exists once a process mounts it.** Until then the volume is `Pending` with that explanation; nothing is billed for it yet.
+- **Shared volumes are File Storage file systems.** They need the mount target the Terraform in `contrib/oci` creates (`shared_storage = true`) and the two `--set` values it prints for `shpyrd cluster init`; without them a `--shared` volume is refused with those instructions. File Storage ignores the size (the file system grows as needed and bills by the space used), which the create command notes.
+- **Snapshots** are block volume backups (incremental after the first), billed on the backup's size.
+
+### Snapshots
+
+Where the profile supports it (Oracle Cloud today; the local profile answers that snapshots are not available), a volume can be snapshotted and restored:
+
+```shell
+shpyrd volumes snapshot data --name before-migration   # a point-in-time copy of the disk
+shpyrd volumes snapshots data                          # list them, newest first
+shpyrd volumes restore data --from before-migration --to data-copy   # into a new volume
+shpyrd volumes restore data --from before-migration --yes            # in place
+shpyrd volumes snapshot rm data before-migration --yes
+```
+
+Restoring into a new volume is the safe path: the copy is created from the snapshot (at least the snapshot's size) and you mount it like any other volume. Restoring in place replaces what is on the volume now: the instances mounting it stop (`stopped while volume data is restored`), the disk is swapped for one created from the snapshot, and they start again as soon as it is ready; take a snapshot first if you may want the current contents back. Neither creates a release; both appear in the activity feed. The dashboard's Resources card offers the same from a **Snapshots** button on each volume.
+
+Snapshots are consistent at the block level, which is right for files; a database is better served by its own backups.
 
 ## Attaching resources
 
