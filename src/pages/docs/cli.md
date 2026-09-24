@@ -79,10 +79,13 @@ description: Every shpyrd command and its flags.
 | `shpyrd secrets list` | Names and last-updated times, plus variables provided by attached resources. Values are never printed. |
 | `shpyrd shell [-- cmd...]` | Interactive shell in a running instance (`--process`, `--instance web.2`); with a command, runs it and returns its exit code. |
 | `shpyrd run <cmd...>` | One-off instance of the current release with the config vars: streams output, returns the exit code, removes the instance. `--size`, `--detach`. |
-| `shpyrd volumes create <name> --size 5Gi` | Create a persistent volume in the project (`--class`, `--shared`). |
+| `shpyrd volumes create <name> --size 5Gi` | Create a persistent volume in the project (`--class`, `--shared`, `--from-snapshot`). Cloud profiles round the size up to the provider's minimum and say so. |
 | `shpyrd volumes list` | Volumes with size, mode, status and what mounts them. |
 | `shpyrd volumes resize <name> --size 10Gi` | Grow a volume (when the storage class allows expansion). |
 | `shpyrd volumes delete <name>` | Delete a volume and its data (`--yes`; `--force` while mounted). |
+| `shpyrd volumes snapshot <volume> [--name <snapshot>]` | Take a snapshot of the volume (where the profile supports snapshots; `--no-wait`). |
+| `shpyrd volumes snapshots <volume>` | List the volume's snapshots (also `snapshot list`); `snapshot rm <volume> <snapshot> --yes` deletes one. |
+| `shpyrd volumes restore <volume> --from <snapshot> [--to <new-volume>]` | Restore a snapshot into a new volume, or in place (`--yes`: the mounting instances stop while the disk is replaced). |
 | `shpyrd pg create <name> --project <p>` | Create a PostgreSQL database (extension `postgres`): `--version`, `--size`, `--storage`, `--instances`. |
 | `shpyrd pg list\|info\|psql\|delete` | Manage databases; `psql <name> -- <args>` opens psql on the primary; delete is refused while attached (`--force`). |
 | `shpyrd redis create <name> --project <p>` | Create a Valkey or Redis store (extension `redis`): `--engine`, `--version`, `--size`, `--persistent`, `--storage`. |

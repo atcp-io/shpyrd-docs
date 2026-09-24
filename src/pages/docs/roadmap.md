@@ -91,7 +91,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | DNS providers: automatic records and one wildcard certificate (OCI DNS; Route 53 and Cloudflare with their profiles) | [RFC-0061](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0061-dns-providers.md) | done (OCI DNS) |
 | Front doors: internal and external load balancers, exposure per project | [RFC-0036](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0036-load-balancer-exposure.md) | done |
 | Custom domains: CNAME or A to the project, per-host certificates | [RFC-0034](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0034-domains-and-certificates.md) | done |
-| Volumes on cloud profiles: storage classes, provider minimums, snapshots, detached disks | [RFC-0060](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0060-volumes-on-cloud-profiles.md) | proposal |
+| Volumes on cloud profiles: storage classes, provider minimums, snapshots, shared volumes on File Storage | [RFC-0060](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0060-volumes-on-cloud-profiles.md) | done |
 
 ## Decided against, for now
 
