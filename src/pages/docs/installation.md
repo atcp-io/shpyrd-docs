@@ -126,9 +126,28 @@ rc4       shpyrd           ready            ...
 
 Endpoints on the default domain:
 
-- `https://shpyrd.127.0.0.1.nip.io` — dashboard (`shpyrd cluster dashboard` opens it signed in; `shpyrd cluster token` prints the admin token)
+- `https://shpyrd.127.0.0.1.nip.io` — dashboard
 - `https://grafana.127.0.0.1.nip.io` — Grafana (`admin` / `shpyrd` on the local profile)
 - `10.96.0.50:5000` — the in-cluster registry, inside the cluster only (`shpyrd cluster registry` shows its state)
+
+## Sign in
+
+The installer generated one credential, the **admin token**, stored as a Secret in the cluster. The CLI uses it through your kubeconfig without you noticing; the dashboard asks for it:
+
+```shell
+shpyrd cluster dashboard     # opens the dashboard signed in, through a one-time ticket
+shpyrd cluster token         # prints the token for the "Admin token" field of the sign-in page
+```
+
+For one developer on a laptop that is all. For a team, enable accounts and make yourself the first platform admin - from the first team on, roles are enforced:
+
+```shell
+shpyrd cluster init --enable auth-local
+shpyrd users add you@example.com --name "You"                                       # prompts for a password
+shpyrd teams create platform --platform-role platform-admin --member you@example.com
+```
+
+Then sign in with the email and password, and switch the token off when nobody needs it (`shpyrd cluster token --disable`; `--rotate` replaces it). Details: [Extensions and sign-in](/docs/extensions), [Teams, roles and security](/docs/access).
 
 ## Install on an existing cluster
 
