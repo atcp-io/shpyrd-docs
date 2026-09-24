@@ -252,6 +252,15 @@ shpyrd rollback 4      # to a specific release: its build and its config vars
 
 A rollback is refused while another release is still rolling out (`--force` overrides). See [Concepts](/docs/concepts#releases) for what a release contains.
 
+## Redeploy
+
+```shell
+shpyrd redeploy                # new instances of the current release
+shpyrd redeploy --rebuild      # build the same source again
+```
+
+Redeploy tries the current release again without creating a release. With a healthy or unhealthy release it starts new instances of it (a rolling restart: the fix for an instance stuck on a dependency that came back). When the last build failed - a registry hiccup, a flaky download - it builds the same source again instead, and the release that results is a normal deploy. The project page has the same button; in the card of a failed release it reads **Retry build**.
+
 ## Open and inspect
 
 ```shell

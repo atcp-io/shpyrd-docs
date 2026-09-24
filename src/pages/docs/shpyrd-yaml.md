@@ -1,6 +1,6 @@
 ---
 title: shpyrd.yaml
-description: The project file - which app a repository is, its process types, sizes, build settings and domains.
+description: The project file - which project a repository is, its process types, sizes, build settings, custom domains and exposure.
 ---
 
 `shpyrd.yaml` lives at the root of the directory you deploy from and plays the role of `fly.toml` or a `Procfile` plus `app.json`. Everything but `app` is optional. {% .lead %}
@@ -35,9 +35,14 @@ build:
   dockerfile: Dockerfile  # dockerfile strategy: path inside the deployed directory
   target: runtime         # dockerfile strategy: multi-stage target
 
-# Extra hostnames for the web process (the default <app>.<domain> stays).
+# Custom domains you own, served in addition to <project>.<domain>: point
+# each at that hostname (CNAME) or at the front door (A record at a zone apex).
 domains:
-  - hello.example.test
+  - www.myprod.com
+
+# Which front door serves the project on cloud profiles: external (public
+# load balancer, default) or internal (private one).
+exposure: external
 ```
 
 ## Fields
@@ -56,7 +61,8 @@ domains:
 | `build.env` | Environment for the build: buildpack configuration such as `BP_GO_TARGETS`, `BP_JVM_VERSION`, `BP_NODE_RUN_SCRIPTS`, or `ARG` values for a Dockerfile. Runtime config vars are set with `shpyrd secrets`, not here. |
 | `build.builder` | kpack `ClusterBuilder` to use (buildpacks). |
 | `build.dockerfile`, `build.target` | Dockerfile path relative to the deployed directory (default `Dockerfile`) and the multi-stage target to build. |
-| `domains` | Additional hostnames; certificates are issued for each. |
+| `domains` | Custom domains served in addition to the project hostname, each with its own certificate once its DNS record points here. See [Domains and exposure](/docs/domains). |
+| `exposure` | `external` (default) or `internal`: which load balancer serves the project on cloud profiles. Changing it is release-free. |
 
 ## Process types and buildpacks
 
