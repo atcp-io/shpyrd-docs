@@ -5,7 +5,7 @@ description: Run shpyrd on Oracle Kubernetes Engine - the network and cluster fr
 
 The `oci` profile installs shpyrd on Oracle Kubernetes Engine (OKE) with a public load balancer, Let's Encrypt certificates, an in-cluster registry, network policy enforcement and, optionally, automatic DNS. The reference infrastructure lives in [`contrib/oci`](https://github.com/shpyrd-io/shpyrd/tree/main/contrib/oci) as Terraform; the platform itself is `shpyrd cluster init`. {% .lead %}
 
-Oracle Cloud went first among the cloud profiles for cost - the free tier and cheap flexible shapes - and because it exercises the harder path: a private API endpoint, private workers, CRI-O nodes. The layout is what the proof of concept at `oci.shpyrd.io` runs on ([RFC-0035](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0035-cloud-profiles.md)).
+Oracle Cloud went first among the cloud profiles for cost - the free tier and cheap flexible shapes - and because it exercises the harder path: a private API endpoint, private workers, CRI-O nodes. The layout is the one shpyrd's own development cluster runs on ([RFC-0035](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0035-cloud-profiles.md)).
 
 ## What you get
 
@@ -167,13 +167,12 @@ At the defaults, on the pay-as-you-go price list: two `VM.Standard.E5.Flex` work
 
 ## Tear down
 
-Delete what Kubernetes created in the cloud first, or it outlives the cluster: `shpyrd projects destroy` for every project (their volumes go with them), then the load balancer Services.
+What the platform created in the cloud through Kubernetes must go first, or it outlives the cluster. `shpyrd cluster destroy` on the context does that in order and waits for the cloud to confirm each step: every project with its data, the load balancers, then the remaining disks (registry, server data, monitoring). Then Terraform removes the cluster, the network and the DNS zone.
 
 ```shell
-kubectl --context oke-shpyrd-prod delete svc -n ingress-nginx ingress-nginx-controller
-kubectl --context oke-shpyrd-prod delete svc -n ingress-nginx-internal ingress-nginx-internal-controller
-kubectl --context oke-shpyrd-prod delete pvc -A --all
+shpyrd cluster destroy --context oke-shpyrd-prod
 cd contrib/oci/terraform && terraform destroy
+kubectl config delete-context oke-shpyrd-prod
 ```
 
 The DNS zone's delegation at the registrar is the one thing left to remove by hand.

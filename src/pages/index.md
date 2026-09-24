@@ -64,7 +64,7 @@ shpyrd logs -f
 
 ## Status
 
-Shpyrd is pre-alpha. The [MVP](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0001-mvp-local-platform.md) runs on a local kind cluster and is developed in the open; see the [roadmap](/docs/roadmap) for what comes next and [how to contribute](/docs/how-to-contribute).
+Shpyrd is in beta: it runs on a local kind cluster and on [Oracle Cloud](/docs/oracle-cloud), and is developed in the open. The [roadmap](/docs/roadmap) shows what is done and what comes next; [how to contribute](/docs/how-to-contribute) explains the way in.
 
 ## Getting help
 
