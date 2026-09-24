@@ -125,11 +125,27 @@ The installer waits for the load balancer address, for `shpyrd.<domain>` to reso
 
 Everything you passed is recorded in the cluster: later runs (`brew upgrade shpyrd && shpyrd cluster init --context oke-shpyrd-prod --profile oci`) need no flags, and the key never leaves the Secrets the installer wrote.
 
-## 5. First project
+## 5. First sign-in
+
+A fresh cluster has one credential: the **admin token**, a Secret the installer generated. The CLI already uses it through your kubeconfig; for the dashboard, open it signed in through a one-time ticket, or copy the token into the sign-in page:
 
 ```shell
-shpyrd users add you@example.com --context oke-shpyrd-prod
+shpyrd cluster dashboard --context oke-shpyrd-prod    # opens https://shpyrd.oci.example.com signed in
+shpyrd cluster token --context oke-shpyrd-prod        # prints the token for the "Admin token" field
+```
+
+The token is a shared, full-rights credential meant for bootstrap and automation. Give people their own accounts instead (`--enable auth-local` above installed the sign-in service), then put yourself in a platform-admin team - the moment the first team exists, roles are enforced and anyone without one sees nothing:
+
+```shell
+shpyrd users add you@example.com --name "You" --context oke-shpyrd-prod        # prompts for a password
 shpyrd teams create platform --platform-role platform-admin --member you@example.com --context oke-shpyrd-prod
+```
+
+Sign in at `https://shpyrd.oci.example.com` with that email and password. When every administrator has an account, switch the token off: `shpyrd cluster token --disable` (the CLI keeps working through your kubeconfig; `--enable` turns it back on). Company sign-in (Okta, any OpenID Connect issuer, GitHub, Google) and teams mapped to identity provider groups are in [Extensions and sign-in](/docs/extensions) and [Teams, roles and security](/docs/access).
+
+## 6. First project
+
+```shell
 shpyrd projects create shop --context oke-shpyrd-prod
 shpyrd deploy --project shop --context oke-shpyrd-prod
 ```
