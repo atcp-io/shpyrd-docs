@@ -165,7 +165,7 @@ A **profile** describes the environment the base stack is built for and therefor
 
 | | `local` | `oci` (Oracle Cloud) | `aws` (AWS) |
 | --- | --- | --- | --- |
-| Load balancer | kind host ports 80/443, or your Caddy | OCI flexible load balancer on a reserved address; a private one for internal projects | an internet-facing Network Load Balancer; an internal one for internal projects |
+| Load balancer | kind host ports 80/443, or your Caddy | OCI flexible load balancer on a reserved address; a private one for internal projects | Network Load Balancers with pod targets (AWS Load Balancer Controller): an internet-facing one on Elastic IPs, an internal one for internal projects |
 | DNS | `*.127.0.0.1.nip.io` or dnsmasq (`*.shpyrd.test`) | a wildcard record you create, or a zone in OCI DNS managed by ExternalDNS | a zone in Route 53 managed by ExternalDNS (alias records) |
 | TLS | development CA issued by cert-manager | Let's Encrypt (one wildcard with a DNS provider); the platform CA for the registry | Let's Encrypt (one wildcard through the Route 53 solver); the platform CA for the registry |
 | Registry | in-cluster, TLS from the CA | in-cluster, TLS from the CA; OCIR with `--registry-host` | in-cluster, TLS from the CA |

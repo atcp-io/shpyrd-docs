@@ -9,10 +9,10 @@ The `aws` profile installs shpyrd on Amazon EKS with Network Load Balancers for 
 
 | | |
 | --- | --- |
-| Network | a VPC (`10.0.0.0/16`) with two public subnets (load balancers, one NAT gateway) and two private `/19` subnets for nodes and pods (the VPC CNI gives pods VPC addresses) |
+| Network | a VPC (`10.0.0.0/16`) with two public subnets (load balancers, one NAT gateway per zone) and two private `/19` subnets for nodes and pods (the VPC CNI gives pods VPC addresses) |
 | Cluster | EKS in API authentication mode (the Terraform caller is the first administrator), a **private API endpoint** (reachable over the VPN; a public one restricted to your address is opt-in), one managed node group on Amazon Linux 2023, standard support only |
-| Credentials | EKS Pod Identity: IAM roles associated with the service accounts that need AWS (the EBS and EFS CSI drivers, ExternalDNS, cert-manager). No access keys are created or stored |
-| Front doors | an internet-facing NLB for the platform; an internal NLB for projects marked internal ([Domains and exposure](/docs/domains)). NLBs have hostnames, so DNS uses alias records |
+| Credentials | EKS Pod Identity: IAM roles associated with the service accounts that need AWS (the load balancer controller, the EBS and EFS CSI drivers, ExternalDNS, cert-manager). No access keys are created or stored |
+| Front doors | Network Load Balancers from the AWS Load Balancer Controller with **pod targets**: an internet-facing one on two **Elastic IPs** (static addresses for allow-lists and apex A records), an internal one for projects marked internal ([Domains and exposure](/docs/domains)). DNS uses their hostnames as alias records |
 | Certificates | Let's Encrypt; with the zone in Route 53, one wildcard certificate for every project hostname through cert-manager's Route 53 solver |
 | Registry | the in-cluster registry with TLS from the platform CA |
 | Isolation | the VPC CNI's own network policy agent enforces `NetworkPolicy` (no Calico needed) |
@@ -45,6 +45,7 @@ name    = "shpyrd-prod"
 kubernetes_version = "1.36"
 node_instance_type = "t3a.large"
 node_count         = 2
+# nat_gateway_per_az = false         # one shared NAT gateway instead of one per zone
 
 dns_zone       = "aws.example.com"   # public zone in Route 53; "" for none
 vpn            = true                # Client VPN endpoint + profile: the way to kubectl
@@ -96,18 +97,23 @@ The command `terraform output next_steps` printed, roughly:
 
 ```shell
 shpyrd cluster init --context eks-shpyrd-prod --profile aws --domain aws.example.com \
-  --set SHPYRD_ACME_EMAIL=you@example.com --set SHPYRD_EFS_ID=fs-0123456789abcdef0 \
+  --set SHPYRD_ACME_EMAIL=you@example.com \
+  --set SHPYRD_AWS_CLUSTER=shpyrd-prod --set SHPYRD_AWS_REGION=us-east-1 --set SHPYRD_AWS_VPC_ID=vpc-0123 \
+  --set SHPYRD_AWS_LB_EIPS=eipalloc-0123,eipalloc-4567 --set SHPYRD_LB_IP=3.214.96.238,54.156.219.26 \
+  --set SHPYRD_EFS_ID=fs-0123456789abcdef0 \
   --dns aws --dns-zone-id Z0123456789ABCDEFGHIJ --dns-region us-east-1 \
   --enable auth-local
 ```
+
+Add `--platform-exposure internal` to put the dashboard, sign-in and Grafana behind the internal load balancer (VPN only) while the apps stay public; the Kubernetes API is private regardless.
 
 What happens, in order:
 
 | Level | Components |
 | --- | --- |
 | rc0 | Prometheus Operator CRDs |
-| rc1 | cert-manager (with ambient credentials for Route 53), the registry credential, the snapshot controller and the EBS snapshot class, the `gp3` and `shpyrd-efs` storage classes |
-| rc2 | Let's Encrypt issuers, the platform CA and trust bundle, ingress-nginx behind an internet-facing NLB and the internal one behind an internal NLB, the registry and the node trust for it, ExternalDNS |
+| rc1 | the AWS Load Balancer Controller, cert-manager (with ambient credentials for Route 53), the registry credential, the snapshot controller and the EBS snapshot class, the `gp3` and `shpyrd-efs` storage classes |
+| rc2 | Let's Encrypt issuers, the platform CA and trust bundle, ingress-nginx behind an internet-facing NLB on the Elastic IPs and the internal one behind an internal NLB (both with pod targets), the registry and the node trust for it, ExternalDNS |
 | rc3 | kpack with the Paketo builder, kube-prometheus-stack, the wildcard certificate |
 | rc4 | the shpyrd server |
 
@@ -117,8 +123,8 @@ The installer waits for the load balancer hostname, for `shpyrd.<domain>` to res
   Dashboard:  https://shpyrd.aws.example.com
   Grafana:    https://grafana.aws.example.com
   Registry:   in-cluster at 10.100.0.50:5000 (TLS from the platform CA, credential in Secret shpyrd-registry)
-  External LB:   a5682de1d346f48ab8c71d0414e9e9bc-98c03caa5d4d8a2a.elb.us-east-1.amazonaws.com (ExternalDNS: *.aws.example.com)
-  Internal LB:   a5ed078eff056497ca7be2b629495a99-4ada3899ca55ff74.elb.us-east-1.amazonaws.com (ExternalDNS: per host, exposure:internal)
+  External LB:   k8s-ingressn-ingressn-015ed2971e-ae9f48a7eeaa7d9f.elb.us-east-1.amazonaws.com (ExternalDNS: *.aws.example.com)
+  Internal LB:   k8s-ingressn-ingressn-60fb9cbfd6-a7ec35b89089177e.elb.us-east-1.amazonaws.com (ExternalDNS: per host, exposure:internal)
 ```
 
 Everything you passed is recorded in the cluster: later runs (`brew upgrade shpyrd && shpyrd cluster init --context eks-shpyrd-prod --profile aws`) need no flags.
@@ -137,11 +143,11 @@ shpyrd deploy --project shop --context eks-shpyrd-prod
 
 ## Costs
 
-At the defaults, on demand in us-east-1: the EKS control plane $0.10 per hour, two `t3a.large` nodes $0.15, the NAT gateway $0.045 plus data, two Network Load Balancers $0.045, the Client VPN association $0.10 plus $0.05 per connection; about $0.45 per hour all in. EBS `gp3` $0.08 per GB-month, EFS by the space used, the zone $0.50 per month. A development cluster is created for a working session and destroyed after it.
+At the defaults, on demand in us-east-1: the EKS control plane $0.10 per hour, two `t3a.large` nodes $0.15, two NAT gateways $0.09 plus data (`nat_gateway_per_az = false` halves it), two Network Load Balancers $0.045, the Client VPN association $0.10 plus $0.05 per connection; about $0.50 per hour all in. EBS `gp3` $0.08 per GB-month, EFS by the space used, the zone $0.50 per month. A development cluster is created for a working session and destroyed after it.
 
 ## Good to know
 
-- **Hostnames, not addresses.** Network Load Balancers have DNS names. The cluster page and `cluster init` show them, ExternalDNS makes alias records, and a custom domain at a zone apex needs an ALIAS record at a provider that offers one (a CNAME to the project hostname works everywhere else).
+- **Addresses and hostnames.** The public front door has two static Elastic IPs (the A-record targets for a zone apex, shown on the Domains card) and a DNS name that ExternalDNS uses for alias records; the internal one has a DNS name only. Load balancers are managed by the AWS Load Balancer Controller with pod targets; an ALB is not used because it would terminate TLS with ACM certificates, which does not fit per-domain certificates from cert-manager.
 - **Network policy.** The VPC CNI enforces it with its own agent; `cluster init` recognises it and installs nothing.
 - **Snapshots** are EBS snapshots, crash-consistent: shpyrd runs `sync` in the instances mounting the volume before taking one, so what the application had written is in the copy.
 - **Existing clusters.** The profile works on any EKS cluster that has the same add-ons and Pod Identity associations as the Terraform creates (CSI drivers, `shpyrd-system/external-dns`, `cert-manager/cert-manager`), and subnets tagged for the in-tree load balancer discovery.
