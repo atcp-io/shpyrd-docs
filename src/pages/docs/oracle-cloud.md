@@ -92,16 +92,24 @@ From then on nothing in that zone is touched by hand: ExternalDNS publishes a re
 
 ## 4. Install the platform
 
-The command `terraform output next_steps` printed, roughly:
+Terraform wrote every value the platform needs from the infrastructure into `contrib/oci/terraform/<name>.vars` — you never copy an OCID by hand; only the DNS user's key stays a separate file, because it is a secret. The command `terraform output next_steps` printed:
 
 ```shell
-shpyrd cluster init --context oke-shpyrd-prod --profile oci --domain oci.example.com \
-  --set SHPYRD_ACME_EMAIL=you@example.com --set SHPYRD_LB_IP=<reserved address> \
-  --dns oci --dns-compartment <compartment ocid> --dns-tenancy <tenancy ocid> --dns-region sa-saopaulo-1 \
-  --dns-user <user ocid> --dns-key-file contrib/oci/terraform/shpyrd-prod-dns.pem \
-  --internal-lb-subnet <private lb subnet ocid> \
-  --enable auth-local
+shpyrd cluster init --context oke-shpyrd-prod --profile oci --vars-file contrib/oci/terraform/shpyrd-prod.vars \
+  --set SHPYRD_ACME_EMAIL=you@example.com --dns-key-file contrib/oci/terraform/shpyrd-prod-dns.pem --enable auth-local
 ```
+
+What the file carries, and where each value comes from:
+
+| Value | Meaning | Source |
+| --- | --- | --- |
+| `SHPYRD_DOMAIN` | the platform's domain | `dns_zone` |
+| `SHPYRD_LB_IP` | the reserved address of the public load balancer | `reserved_public_ip` |
+| `SHPYRD_INTERNAL_LB_SUBNET` | the private load balancer subnet for internal front doors | the `lb_private` subnet |
+| `SHPYRD_FSS_MOUNT_TARGET`, `SHPYRD_FSS_AD` | File Storage behind shared volumes | `shared_storage` |
+| `SHPYRD_DNS_*` | OCI DNS automation: provider, compartment, tenancy, region, user, key or workload identity | the zone and the DNS user |
+
+Flags and `--set` win over the file (`--platform-exposure internal`, `--set SHPYRD_REGISTRY_SIZE=100Gi`, `--internal-lb-subnet` for another subnet).
 
 What happens, in order:
 

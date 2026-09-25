@@ -93,19 +93,24 @@ Nothing in the zone is written by Terraform or by hand: ExternalDNS publishes `*
 
 ## 5. Install the platform
 
-The command `terraform output next_steps` printed, roughly:
+Terraform wrote every value the platform needs from the infrastructure into `contrib/aws/terraform/<name>.vars` — you never copy an identifier by hand. The command `terraform output next_steps` printed:
 
 ```shell
-shpyrd cluster init --context eks-shpyrd-prod --profile aws --domain aws.example.com \
-  --set SHPYRD_ACME_EMAIL=you@example.com \
-  --set SHPYRD_AWS_CLUSTER=shpyrd-prod --set SHPYRD_AWS_REGION=us-east-1 --set SHPYRD_AWS_VPC_ID=vpc-0123 \
-  --set SHPYRD_AWS_LB_EIPS=eipalloc-0123,eipalloc-4567 --set SHPYRD_LB_IP=3.214.96.238,54.156.219.26 \
-  --set SHPYRD_EFS_ID=fs-0123456789abcdef0 \
-  --dns aws --dns-zone-id Z0123456789ABCDEFGHIJ --dns-region us-east-1 \
-  --enable auth-local
+shpyrd cluster init --context eks-shpyrd-prod --profile aws --vars-file contrib/aws/terraform/shpyrd-prod.vars \
+  --set SHPYRD_ACME_EMAIL=you@example.com --enable auth-local
 ```
 
-Add `--platform-exposure internal` to put the dashboard, sign-in and Grafana behind the internal load balancer (VPN only) while the apps stay public; the Kubernetes API is private regardless.
+What the file carries, and where each value comes from:
+
+| Value | Meaning | Source |
+| --- | --- | --- |
+| `SHPYRD_DOMAIN` | the platform's domain | `dns_zone` |
+| `SHPYRD_AWS_CLUSTER`, `SHPYRD_AWS_REGION`, `SHPYRD_AWS_VPC_ID` | what the load balancer controller manages | the cluster; discovered from the cluster itself when absent |
+| `SHPYRD_AWS_LB_EIPS`, `SHPYRD_LB_IP` | the public front door's Elastic IPs (allocation ids for the controller, addresses for the Domains card) | the two `aws_eip.lb` |
+| `SHPYRD_EFS_ID` | the file system behind shared volumes | `shared_storage` |
+| `SHPYRD_DNS_PROVIDER`, `SHPYRD_DNS_ZONE_ID`, `SHPYRD_DNS_REGION` | Route 53 automation | the hosted zone |
+
+Flags and `--set` win over the file, so `--platform-exposure internal` (dashboard, sign-in and Grafana behind the internal load balancer, VPN only, apps public) or `--set SHPYRD_REGISTRY_SIZE=50Gi` go on the same command line. On a cluster you did not create with this Terraform, pass the values with `--set`; the three cluster facts are read from the cluster.
 
 What happens, in order:
 
