@@ -22,7 +22,23 @@ shpyrd pg delete db --project shop --yes                  # refused while attach
 
 Each database is its own [CloudNativePG](https://cloudnative-pg.io) cluster in the project namespace: streaming replication and failover when `--instances` is 2 or 3, a `db-rw` service for the primary and `db-ro` for replicas, a database `app` owned by user `app`. The instance size sets CPU and memory, with a floor of 256 MiB because PostgreSQL does not start below it; storage grows (`shpyrd pg create` again is not needed, edit the resource) but never shrinks.
 
-Not there yet: backups to object storage and point-in-time recovery, connection pooling and credential rotation ([RFC-0009](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0009-postgres-resource.md)).
+### Backups and point-in-time recovery
+
+With the `object-storage` extension enabled ([Extensions](/docs/extensions#object-storage)), a database can be backed up continuously: WAL archiving plus a daily base backup into a bucket of the platform's store that only this database's key can open, kept for the retention period.
+
+```shell
+shpyrd pg create db --project shop --backups --retention 14d       # or later:
+shpyrd pg backups enable db --project shop --retention 7d --schedule "0 3 * * *"
+shpyrd pg backups list db --project shop                           # base backups, with the recovery window
+shpyrd pg backup db --project shop                                 # one now, before something risky
+shpyrd pg restore db --as db-restored --to 2026-09-25T16:58:02Z --project shop
+```
+
+`pg info` and the dashboard show the state (`on, daily at 02:00 UTC, kept 7d, last …, recoverable from …`). A restore never touches the source: it creates a **new** database recovered to the moment you name (RFC 3339, UTC; the latest possible when omitted), any second inside the window, with its own credentials; when it is ready, `shpyrd attach db-restored` and detach the old one. Restores are refused before the earliest recoverable point and onto the database itself. `shpyrd pg backups disable` stops archiving; existing backups stay restorable until the database is deleted, when its bucket goes with it.
+
+Backups live in the cluster's object store; copies that must survive the cluster are the platform backups' business ([RFC-0037](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0037-platform-backup-and-restore.md)).
+
+Not there yet: connection pooling and credential rotation ([RFC-0039](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0039-postgres-pooling-rotation-resize.md)).
 
 ## Redis and Valkey
 
