@@ -86,6 +86,7 @@ description: Every shpyrd command and its flags.
 | `shpyrd volumes snapshot <volume> [--name <snapshot>]` | Take a snapshot of the volume (where the profile supports snapshots; `--no-wait`). |
 | `shpyrd volumes snapshots <volume>` | List the volume's snapshots (also `snapshot list`); `snapshot rm <volume> <snapshot> --yes` deletes one. |
 | `shpyrd volumes restore <volume> --from <snapshot> [--to <new-volume>]` | Restore a snapshot into a new volume, or in place (`--yes`: the mounting instances stop while the disk is replaced). |
+| `shpyrd object-storage list` | Buckets of the platform's object store with usage (extension object-storage). |
 | `shpyrd pg create <name> --project <p>` | Create a PostgreSQL database (extension `postgres`): `--version`, `--size`, `--storage`, `--instances`. |
 | `shpyrd pg list\|info\|psql\|delete` | Manage databases; `psql <name> -- <args>` opens psql on the primary; delete is refused while attached (`--force`). |
 | `shpyrd redis create <name> --project <p>` | Create a Valkey or Redis store (extension `redis`): `--engine`, `--version`, `--size`, `--persistent`, `--storage`. |
