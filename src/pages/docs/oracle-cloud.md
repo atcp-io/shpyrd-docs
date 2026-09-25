@@ -12,7 +12,8 @@ Oracle Cloud went first among the cloud profiles for cost - the free tier and ch
 | | |
 | --- | --- |
 | Network | a VCN (`10.0.0.0/16`) with private subnets for the Kubernetes API endpoint, the workers and the pods (VCN-native pod networking), a public and a private load balancer subnet, a Bastion subnet; internet, NAT and service gateways; network security groups with the rules OKE needs |
-| Cluster | OKE, Basic (free control plane) or Enhanced, private API endpoint reached through the OCI Bastion service, one node pool of flexible-shape workers |
+| Cluster | OKE, Basic (free control plane) or Enhanced, private API endpoint reached over the VPN (or the OCI Bastion service), one node pool of flexible-shape workers |
+| Access | a WireGuard instance in a public subnet, keys and profile from Terraform: the way to the private API endpoint, the private front door and the nodes |
 | Front doors | a public OCI flexible load balancer on a **reserved address** (survives cluster rebuilds); a private one for projects marked internal ([Domains and exposure](/docs/domains)) |
 | Certificates | Let's Encrypt; with a DNS provider, one wildcard certificate for every project hostname |
 | Registry | the in-cluster registry with TLS from the platform CA (no OCIR account needed; OCIR stays one flag away) |
@@ -40,6 +41,7 @@ Fill in `terraform.tfvars`:
 tenancy_ocid = "ocid1.tenancy.oc1..aaaa"
 region       = "sa-saopaulo-1"
 name         = "shpyrd-prod"
+vpn          = true                  # WireGuard instance + profile: the way to kubectl and the private front door
 
 cluster_type = "BASIC_CLUSTER"       # ENHANCED_CLUSTER for workload identity (per-cluster fee)
 node_shape   = "VM.Standard.E5.Flex" # or VM.Standard.A1.Flex (Always Free, arm64) where the region has capacity
@@ -64,18 +66,21 @@ terraform apply          # about 15 minutes
 A **Basic** cluster has a free control plane; the DNS automation then uses an IAM user with an API key that Terraform creates (`dns_auth = "key"`). An **Enhanced** cluster costs about $0.10 per hour and adds workload identity: the cluster's service accounts get their permissions directly and no key exists anywhere (`dns_auth = "workload"`). Basic upgrades to Enhanced in place.
 {% /callout %}
 
-## 2. Reach the cluster
+## 2. Connect the VPN and reach the cluster
 
-The API endpoint is private. Two scripts next to the Terraform handle it:
+The API endpoint is private. With `vpn = true` (the default) Terraform created a WireGuard instance and wrote `contrib/oci/terraform/<name>-vpn.conf`: import it in the [WireGuard app](https://www.wireguard.com/install/) (Import tunnel(s) from file) and activate it. The tunnel is split: only the VCN range (`10.0.0.0/16`) goes through it. Connected, you reach the API endpoint, the private front door (`--platform-exposure internal`, internal projects) and the nodes.
 
 ```shell
 cd ..                    # contrib/oci
-./kubeconfig.sh          # writes the kubectl context oke-<name>, pointed at the tunnel
-./tunnel.sh &            # Bastion port-forwarding session + ssh tunnel on 127.0.0.1:6443
+./kubeconfig.sh          # writes the kubectl context oke-<name> (private endpoint)
 kubectl --context oke-shpyrd-prod get nodes
 ```
 
-Bastion sessions live three hours; run `tunnel.sh` again when kubectl stops answering. The kubeconfig keeps TLS verification against the endpoint's own address.
+The profile is a credential; keep it with the Terraform state (git-ignored) and rotate it by tainting `wireguard_asymmetric_key.client`. The instance is a `VM.Standard.E5.Flex` with 1 OCPU and 2 GB (about three cents an hour); the Always Free micro shape is too small for Oracle Linux 9's package manager.
+
+{% callout title="Without the VPN" %}
+`vpn = false` keeps the OCI Bastion service as the way in: `./tunnel.sh &` opens a port-forwarding session and an ssh tunnel on `127.0.0.1:6443` (sessions live three hours; run it again when kubectl stops answering), and `kubeconfig.sh` points the context at it with TLS still verified against the endpoint's own address.
+{% /callout %}
 
 ## 3. Delegate the zone
 
