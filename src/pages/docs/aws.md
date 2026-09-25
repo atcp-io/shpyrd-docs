@@ -157,6 +157,7 @@ At the defaults, on demand in us-east-1: the EKS control plane $0.10 per hour, t
 - **Snapshots** are EBS snapshots, crash-consistent: shpyrd runs `sync` in the instances mounting the volume before taking one, so what the application had written is in the copy.
 - **Existing clusters.** The profile works on any EKS cluster that has the same add-ons and Pod Identity associations as the Terraform creates (CSI drivers, `shpyrd-system/external-dns`, `cert-manager/cert-manager`), and subnets tagged for the in-tree load balancer discovery.
 - **Upgrading.** `brew upgrade shpyrd` then `shpyrd cluster init` on the context.
+- **Platform backups.** `contrib/aws/terraform/backups` creates an S3 bucket that outlives the cluster; `backup_bucket` in the cluster root grants the platform's service account access through Pod Identity (no keys) and puts the target in the vars file. Nightly archives, `shpyrd cluster backup` now, `shpyrd cluster restore` on a new cluster: [Platform backups](/docs/backups).
 
 ## Tear down
 
@@ -166,4 +167,4 @@ cd contrib/aws/terraform && terraform destroy       # cluster, network, zone, VP
 kubectl config delete-context eks-shpyrd-prod
 ```
 
-The zone's delegation at the registrar is the one thing left to remove by hand.
+The zone's delegation at the registrar is the one thing left to remove by hand. The backup bucket (`contrib/aws/terraform/backups`) is untouched: it is there to restore from; `terraform destroy` in that directory removes it when the archives are no longer wanted.

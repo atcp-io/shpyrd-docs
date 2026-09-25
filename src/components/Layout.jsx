@@ -34,6 +34,7 @@ export const navigation = [
       { title: 'Logs', href: '/docs/logs' },
       { title: 'Extensions and sign-in', href: '/docs/extensions' },
       { title: 'Teams, roles and security', href: '/docs/access' },
+      { title: 'Platform backups', href: '/docs/backups' },
       { title: 'Dashboard', href: '/docs/dashboard' },
       { title: 'CLI reference', href: '/docs/cli' },
     ],
