@@ -32,7 +32,7 @@ That is the whole flow, the same as on Heroku or Render: pointing DNS at the pla
 | Host | Record to create |
 | --- | --- |
 | a subdomain (`www.myprod.com`, `app.acme.io`) | `CNAME` to the project hostname |
-| a zone apex (`myprod.com`) | `A` to the front door's address (the reserved address on Oracle Cloud), or `ALIAS`/`ANAME` to the project hostname where the provider offers it (DNSimple, Cloudflare, Route 53 alias records) |
+| a zone apex (`myprod.com`) | `A` to the front door's address where it has one (the reserved address on Oracle Cloud), or `ALIAS`/`ANAME` to the project hostname where the provider offers it (DNSimple, Cloudflare, Route 53 alias records). On AWS the front door is a load balancer hostname, so an apex needs the `ALIAS` form |
 
 Each custom domain has its own certificate, so a domain whose DNS is not ready yet never affects the project hostname or the other domains. The card and `shpyrd domains list` report, per host:
 
