@@ -17,13 +17,22 @@ shpyrd extensions disable auth-local --yes
 NAME        STATUS   COMPONENT  DESCRIPTION
 auth-local  enabled  dex        Sign in with email and password: a bundled Dex issuer stores local accounts (shpyrd users add)
 auth-oidc   enabled  -          Sign in with a company identity provider: Okta or any OpenID Connect issuer (shpyrd auth oidc set)
-postgres    enabled  cnpg       PostgreSQL databases for projects (CloudNativePG), attached to apps as DATABASE_URL (shpyrd pg create)
-redis       enabled  -          Redis-compatible caches and queues for projects (Valkey or Redis), attached to apps as REDIS_URL (shpyrd redis create)
+postgres        enabled  cnpg            PostgreSQL databases for projects (CloudNativePG), attached to apps as DATABASE_URL (shpyrd pg create)
+redis           enabled  -               Redis-compatible caches and queues for projects (Valkey or Redis), attached to apps as REDIS_URL (shpyrd redis create)
+object-storage  enabled  object-storage  S3-compatible object store in the cluster (Garage) with a key per consumer: the backing store for Postgres backups and platform backups
 ```
 
 Enabling installs the extension's component with the same runlevel installer as the base stack (ordering, readiness waits, install record) and restarts the server with the extension; the choice is recorded in the cluster, so `shpyrd cluster init` and `shpyrd cluster status` keep it. Disabling removes the component and is refused while resources of the extension still exist. The **Cluster** page lists every extension with its state.
 
 Extensions contribute an installer component, resource types with controllers, API routes, CLI commands and login providers through a few small Go interfaces ([RFC-0002](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0002-extension-model.md)). Databases (Postgres, Redis) and shared storage arrive as extensions.
+
+## Object storage
+
+`shpyrd extensions enable object-storage` runs an S3-compatible store in the cluster ([Garage](https://garagehq.deuxfleurs.fr), one node on the profile's block storage class, `SHPYRD_OBJECT_STORAGE_SIZE`: 20Gi locally and on AWS, 50Gi on Oracle Cloud). It is the platform's working store for the extensions that need durable objects — Postgres backups, platform backups — not a bucket service for applications (that comes as a resource type later).
+
+Every consumer gets a bucket **and a key that opens only that bucket**: an `ObjectBucket` resource in its namespace produces the bucket `shpyrd-<namespace>-<name>` and a Secret `<name>-object-storage` next to it (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL`, `BUCKET`). A key from one project cannot list or read another project's bucket. Optional retention (`retentionDays`) expires old objects; `deletionPolicy: Retain` keeps the bucket's contents when the resource goes.
+
+The **Cluster** page shows the store's volume and every bucket with its size and object count; `shpyrd object-storage list` prints the same. The store speaks plain HTTP inside the cluster; it is never exposed outside it. Copies that must survive the cluster — the platform's own backups — go to the provider's object storage ([RFC-0037](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0037-platform-backup-and-restore.md)).
 
 ## Signing in with an account
 
