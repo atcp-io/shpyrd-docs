@@ -36,7 +36,7 @@ shpyrd pg restore db --as db-restored --to 2026-09-25T16:58:02Z --project shop
 
 `pg info` and the dashboard show the state (`on, daily at 02:00 UTC, kept 7d, last …, recoverable from …`). A restore never touches the source: it creates a **new** database recovered to the moment you name (RFC 3339, UTC; the latest possible when omitted), any second inside the window, with its own credentials; when it is ready, `shpyrd attach db-restored` and detach the old one. Restores are refused before the earliest recoverable point and onto the database itself. `shpyrd pg backups disable` stops archiving; existing backups stay restorable until the database is deleted, when its bucket goes with it.
 
-Backups live in the cluster's object store; copies that must survive the cluster are the platform backups' business ([RFC-0037](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0037-platform-backup-and-restore.md)).
+Backups live in the cluster's object store and go with the cluster: a [platform backup](/docs/backups) restores the database's definition on a new cluster, not its contents. Copying the in-cluster store to the provider's bucket is the open follow-up ([RFC-0046](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0046-object-storage.md)); until then, `pg_dump` what must survive the cluster.
 
 Not there yet: connection pooling and credential rotation ([RFC-0039](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0039-postgres-pooling-rotation-resize.md)).
 

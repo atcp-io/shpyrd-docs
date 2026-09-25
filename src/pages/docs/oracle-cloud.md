@@ -176,6 +176,7 @@ At the defaults, on the pay-as-you-go price list: two `VM.Standard.E5.Flex` work
 - **Shared volumes need File Storage.** Set `shared_storage = true` in `terraform.tfvars` and pass the two `--set SHPYRD_FSS_MOUNT_TARGET=… --set SHPYRD_FSS_AD=…` values `next_steps` prints to `shpyrd cluster init`. It needs the File Storage service limits `Mount Target Count` and `File System Count` above zero in the availability domain (Console: Governance > Limits, Quotas and Usage > File Storage); some tenancies start at 0 and must request an increase. The mount target is free; file systems bill by the space used.
 - **CRI-O.** OKE nodes run CRI-O, which refuses unqualified image names such as `redis:7`; shpyrd's own images are fully qualified, and so should yours be in a Dockerfile.
 - **OCIR instead of the in-cluster registry.** `--registry-host <region>.ocir.io/<tenancy-namespace> --registry-user <namespace>/<user> --registry-token-file <file>` uses OCIR; the registry components are then skipped.
+- **Platform backups.** `contrib/oci/terraform/backups` creates a bucket that outlives the cluster and a key that opens only it; `backup_bucket` in the cluster root puts the target in the vars file, `--backup-credentials-file backups/<name>-backups.env` hands the key to `cluster init`. Nightly archives, `shpyrd cluster backup` now, `shpyrd cluster restore` on a new cluster: [Platform backups](/docs/backups).
 - **Upgrading.** `brew upgrade shpyrd` then `shpyrd cluster init` on the context. The recorded settings carry over; the CLI installs the server image of its own version.
 
 ## Tear down
@@ -188,4 +189,4 @@ cd contrib/oci/terraform && terraform destroy
 kubectl config delete-context oke-shpyrd-prod
 ```
 
-The DNS zone's delegation at the registrar is the one thing left to remove by hand.
+The DNS zone's delegation at the registrar is the one thing left to remove by hand. The backup bucket (`contrib/oci/terraform/backups`) is untouched: it is there to restore from; `terraform destroy` in that directory removes it when the archives are no longer wanted.
