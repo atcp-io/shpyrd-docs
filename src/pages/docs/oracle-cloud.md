@@ -162,7 +162,7 @@ Certificates are publicly trusted, so `https://shop.oci.example.com` opens with 
 
 ## Costs
 
-At the defaults, on the pay-as-you-go price list: two `VM.Standard.E5.Flex` workers (2 OCPU, 12 GB) about $0.10 per hour each; a flexible load balancer at 10 Mbps; the registry's 50 GB block volume; Enhanced clusters add about $0.10 per hour. The Bastion service, the VCN, the reserved address, the DNS zone and Calico are free; DNS queries are billed per million. `VM.Standard.A1.Flex` (Ampere, arm64) is Always Free up to 4 OCPUs and 24 GB when the region has capacity - everything shpyrd runs is multi-arch.
+At the defaults, on the pay-as-you-go price list: two `VM.Standard.E5.Flex` workers (2 OCPU, 12 GB) about $0.10 per hour each; a flexible load balancer at 10 Mbps; the registry's 50 GB block volume; Enhanced clusters add about $0.10 per hour. The Bastion service, the VCN, the reserved addresses, the DNS zone, Calico and the Always Free VPN instance (`VM.Standard.E2.1.Micro`) are free; DNS queries are billed per million. `VM.Standard.A1.Flex` (Ampere, arm64) is Always Free up to 4 OCPUs and 24 GB when the region has capacity - everything shpyrd runs is multi-arch.
 
 ## Good to know
 

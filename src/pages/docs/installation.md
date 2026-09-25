@@ -171,7 +171,7 @@ A **profile** describes the environment the base stack is built for and therefor
 | Registry | in-cluster, TLS from the CA | in-cluster, TLS from the CA; OCIR with `--registry-host` | in-cluster, TLS from the CA |
 | Isolation | kindnet enforces `NetworkPolicy` | Calico in policy-only mode | the VPC CNI's network policy agent |
 | Storage | kind's local path | Block Volume (50 GB minimum), File Storage for shared volumes | EBS `gp3`, EFS for shared volumes |
-| Access | this machine | Bastion tunnel for kubectl | AWS Client VPN (profile from Terraform) |
+| Access | this machine | WireGuard instance (profile from Terraform), or the Bastion tunnel | AWS Client VPN (profile from Terraform) |
 
 The dashboard's cluster page shows the installed profile, and the install record keeps every choice so `cluster init` re-runs need no flags.
 
