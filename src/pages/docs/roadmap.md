@@ -86,7 +86,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 
 | Item | RFC | Status |
 | --- | --- | --- |
-| Cloud profiles: Oracle Cloud (OKE) with Terraform for the infrastructure, network policy enforcement | [RFC-0035](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0035-cloud-profiles.md) | done (OKE); AWS proposal |
+| Cloud profiles: Oracle Cloud (OKE) and AWS (EKS) with Terraform for the infrastructure, network policy enforcement, a VPN into the platform on AWS | [RFC-0035](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0035-cloud-profiles.md) | done |
 | In-cluster registry with TLS on every profile, garbage collection, Registry card | [RFC-0059](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0059-in-cluster-registry-on-cloud.md) | done |
 | DNS providers: automatic records and one wildcard certificate (OCI DNS; Route 53 and Cloudflare with their profiles) | [RFC-0061](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0061-dns-providers.md) | done (OCI DNS) |
 | Front doors: internal and external load balancers, exposure per project | [RFC-0036](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0036-load-balancer-exposure.md) | done |

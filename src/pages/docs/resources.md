@@ -80,7 +80,9 @@ shpyrd volumes snapshot rm data before-migration --yes
 
 Restoring into a new volume is the safe path: the copy is created from the snapshot (at least the snapshot's size) and you mount it like any other volume. Restoring in place replaces what is on the volume now: the instances mounting it stop (`stopped while volume data is restored`), the disk is swapped for one created from the snapshot, and they start again as soon as it is ready; take a snapshot first if you may want the current contents back. Neither creates a release; both appear in the activity feed. The dashboard's Resources card offers the same from a **Snapshots** button on each volume.
 
-Snapshots are consistent at the block level, which is right for files; a database is better served by its own backups.
+Snapshots are taken at the block level and are crash-consistent: before taking one, shpyrd runs `sync` in the instances mounting the volume, so what the application had written is in the copy; a database is still better served by its own backups.
+
+On AWS the `aws` profile puts volumes on EBS `gp3` (encrypted, 1 GiB minimum, expansion allowed), snapshots are EBS snapshots, and shared volumes are EFS access points in the file system `contrib/aws` creates, owned by the same group the platform hands block volumes to, so every process writes to them without further setup.
 
 ## Attaching resources
 

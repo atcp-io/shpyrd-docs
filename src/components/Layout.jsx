@@ -19,6 +19,7 @@ export const navigation = [
       { title: 'Tour', href: '/docs/tour' },
       { title: 'Installation', href: '/docs/installation' },
       { title: 'Oracle Cloud (OKE)', href: '/docs/oracle-cloud' },
+      { title: 'AWS (EKS)', href: '/docs/aws' },
       { title: 'Concepts', href: '/docs/concepts' },
     ],
   },

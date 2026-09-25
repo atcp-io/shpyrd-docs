@@ -3,7 +3,7 @@ title: Installation
 description: Create a local cluster with the shpyrd base stack, or install it on an existing Kubernetes cluster.
 ---
 
-Shpyrd ships as a single CLI, `shpyrd`, that installs the platform on a Kubernetes cluster: a local kind cluster it creates for you, or a cluster you already have - on Oracle Cloud today ([Oracle Cloud (OKE)](/docs/oracle-cloud)), other providers as their profiles arrive. This page covers the local cluster and what every profile shares. {% .lead %}
+Shpyrd ships as a single CLI, `shpyrd`, that installs the platform on a Kubernetes cluster: a local kind cluster it creates for you, or a cluster you already have - on [Oracle Cloud (OKE)](/docs/oracle-cloud) or [AWS (EKS)](/docs/aws), other providers as their profiles arrive. This page covers the local cluster and what every profile shares. {% .lead %}
 
 ## Requirements
 
@@ -157,19 +157,21 @@ The installer works against any kubeconfig context:
 shpyrd cluster init --context my-cluster --profile local --domain apps.example.test --yes
 ```
 
-`--yes` is required for contexts that do not look like kind clusters. The `local` profile assumes ingress-nginx can bind host ports on a node labelled `ingress-ready=true` and that the service subnet is `10.96.0.0/16` (the registry uses the fixed ClusterIP `10.96.0.50`). For a managed Kubernetes cluster use a cloud profile: [Oracle Cloud (OKE)](/docs/oracle-cloud) today.
+`--yes` is required for contexts that do not look like kind clusters. The `local` profile assumes ingress-nginx can bind host ports on a node labelled `ingress-ready=true` and that the service subnet is `10.96.0.0/16` (the registry uses the fixed ClusterIP `10.96.0.50`). For a managed Kubernetes cluster use a cloud profile: [Oracle Cloud (OKE)](/docs/oracle-cloud) or [AWS (EKS)](/docs/aws).
 
 ## Environment profiles
 
 A **profile** describes the environment the base stack is built for and therefore how load balancing, DNS, TLS and the registry are provided:
 
-| | `local` | `oci` (Oracle Cloud) | `aws` (planned) |
+| | `local` | `oci` (Oracle Cloud) | `aws` (AWS) |
 | --- | --- | --- | --- |
-| Load balancer | kind host ports 80/443, or your Caddy | OCI flexible load balancer on a reserved address; a private one for internal projects | AWS Load Balancer Controller |
-| DNS | `*.127.0.0.1.nip.io` or dnsmasq (`*.shpyrd.test`) | a wildcard record you create, or a zone in OCI DNS managed by ExternalDNS | Route 53 via ExternalDNS |
-| TLS | development CA issued by cert-manager | Let's Encrypt (one wildcard with a DNS provider); the platform CA for the registry | Let's Encrypt |
-| Registry | in-cluster, TLS from the CA | in-cluster, TLS from the CA; OCIR with `--registry-host` | in-cluster; ECR with `--registry-host` |
-| Isolation | kindnet enforces `NetworkPolicy` | Calico in policy-only mode | the VPC CNI's policy agent |
+| Load balancer | kind host ports 80/443, or your Caddy | OCI flexible load balancer on a reserved address; a private one for internal projects | an internet-facing Network Load Balancer; an internal one for internal projects |
+| DNS | `*.127.0.0.1.nip.io` or dnsmasq (`*.shpyrd.test`) | a wildcard record you create, or a zone in OCI DNS managed by ExternalDNS | a zone in Route 53 managed by ExternalDNS (alias records) |
+| TLS | development CA issued by cert-manager | Let's Encrypt (one wildcard with a DNS provider); the platform CA for the registry | Let's Encrypt (one wildcard through the Route 53 solver); the platform CA for the registry |
+| Registry | in-cluster, TLS from the CA | in-cluster, TLS from the CA; OCIR with `--registry-host` | in-cluster, TLS from the CA |
+| Isolation | kindnet enforces `NetworkPolicy` | Calico in policy-only mode | the VPC CNI's network policy agent |
+| Storage | kind's local path | Block Volume (50 GB minimum), File Storage for shared volumes | EBS `gp3`, EFS for shared volumes |
+| Access | this machine | Bastion tunnel for kubectl | AWS Client VPN (profile from Terraform) |
 
 The dashboard's cluster page shows the installed profile, and the install record keeps every choice so `cluster init` re-runs need no flags.
 
