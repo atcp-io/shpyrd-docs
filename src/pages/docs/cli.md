@@ -17,7 +17,7 @@ description: Every shpyrd command and its flags.
 | `shpyrd cluster token` | Print the admin token (Secret `shpyrd-system/shpyrd-admin-token`). `--rotate` replaces it, `--disable`/`--enable` switch it off and on (disable needs a login provider and a platform-admin team). |
 | `shpyrd cluster trust-ca` | Install the platform CA in the OS trust store: the development CA (`--ca-dir`) for local clusters, the cluster's own CA when `--context` points at a cloud cluster. Alias `trust`. |
 | `shpyrd cluster export` | Render the base stack manifests to a directory for GitOps tooling (`-o`, profile flags). |
-| `shpyrd cluster destroy` | Delete the kind cluster (`--name`, `--yes`). |
+| `shpyrd cluster destroy` | Delete the kind cluster (`--name`, `--yes`); with `--context` on a cloud cluster, remove everything the platform created in the cloud (projects and their data, load balancers, disks) and print the infrastructure command to finish. |
 | `shpyrd extensions list` | Extensions known to this build and whether they are enabled on the cluster. |
 | `shpyrd extensions enable <name>` | Install the extension's component and restart the server with it (`--set`). Also `cluster init --enable <name>`. |
 | `shpyrd extensions disable <name>` | Remove the component (`--yes`); refused while resources of the extension exist. |
