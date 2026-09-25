@@ -10,7 +10,7 @@ The `aws` profile installs shpyrd on Amazon EKS with Network Load Balancers for 
 | | |
 | --- | --- |
 | Network | a VPC (`10.0.0.0/16`) with two public subnets (load balancers, one NAT gateway) and two private `/19` subnets for nodes and pods (the VPC CNI gives pods VPC addresses) |
-| Cluster | EKS in API authentication mode (the Terraform caller is the first administrator), a private API endpoint plus a public one restricted to your address, one managed node group on Amazon Linux 2023, standard support only |
+| Cluster | EKS in API authentication mode (the Terraform caller is the first administrator), a **private API endpoint** (reachable over the VPN; a public one restricted to your address is opt-in), one managed node group on Amazon Linux 2023, standard support only |
 | Credentials | EKS Pod Identity: IAM roles associated with the service accounts that need AWS (the EBS and EFS CSI drivers, ExternalDNS, cert-manager). No access keys are created or stored |
 | Front doors | an internet-facing NLB for the platform; an internal NLB for projects marked internal ([Domains and exposure](/docs/domains)). NLBs have hostnames, so DNS uses alias records |
 | Certificates | Let's Encrypt; with the zone in Route 53, one wildcard certificate for every project hostname through cert-manager's Route 53 solver |
@@ -47,8 +47,9 @@ node_instance_type = "t3a.large"
 node_count         = 2
 
 dns_zone       = "aws.example.com"   # public zone in Route 53; "" for none
-vpn            = true                # Client VPN endpoint + profile
+vpn            = true                # Client VPN endpoint + profile: the way to kubectl
 shared_storage = true                # EFS for shared volumes
+# api_public_access = true           # also a public API endpoint, restricted to your address
 ```
 
 ```shell
@@ -58,21 +59,23 @@ terraform apply          # about 15 minutes
 
 `terraform output next_steps` prints the rest: the kubectl context script, where the VPN profile was written, the zone's name servers and the full `shpyrd cluster init` command.
 
-## 2. Reach the cluster
+## 2. Connect the VPN
+
+The Kubernetes API is private: only the VPC and VPN clients reach it. Terraform generated a certificate authority, the server certificate (imported to ACM) and one client certificate, and wrote `contrib/aws/terraform/<name>-vpn.ovpn`. Import it in the AWS VPN Client (File > Manage Profiles > Add Profile) and connect. The tunnel is split: only the VPC range goes through it, and DNS goes to the VPC resolver so private names resolve.
+
+Connected, you reach what the internet cannot: the API endpoint, the internal front door (projects marked `exposure: internal`, or the whole platform with `--set SHPYRD_PLATFORM_EXPOSURE=internal`). The profile is a credential; keep it with the Terraform state (it is git-ignored) and rotate it by tainting `tls_private_key.vpn_client`.
+
+{% callout title="No VPN on that machine?" %}
+`api_public_access = true` adds a public API endpoint restricted to `admin_cidrs` (your address at apply time by default). It is also the way back in if the profile is lost: Terraform talks to the AWS control plane, not to Kubernetes, so `terraform apply` restores access in two minutes.
+{% /callout %}
+
+## 3. Reach the cluster
 
 ```shell
 cd ..                    # contrib/aws
 ./kubeconfig.sh          # writes the kubectl context eks-<name>
 kubectl --context eks-shpyrd-prod get nodes
 ```
-
-The public API endpoint admits the addresses in `admin_cidrs` (your address at apply time by default); when it changes, `terraform apply` again, or connect the VPN, which reaches the private endpoint.
-
-## 3. The VPN
-
-With `vpn = true`, Terraform generated a certificate authority, the server certificate (imported to ACM) and one client certificate, and wrote `contrib/aws/terraform/<name>-vpn.ovpn`. Import it in the AWS VPN Client (File > Manage Profiles > Add Profile) and connect. The tunnel is split: only the VPC range goes through it, and DNS goes to the VPC resolver so private names resolve.
-
-Connected, you reach what the internet cannot: the internal front door (projects marked `exposure: internal`, or the whole platform with `--set SHPYRD_PLATFORM_EXPOSURE=internal`) and the private API endpoint. The profile is a credential; keep it with the Terraform state (it is git-ignored) and rotate it by tainting `tls_private_key.vpn_client`.
 
 ## 4. Delegate the zone
 
