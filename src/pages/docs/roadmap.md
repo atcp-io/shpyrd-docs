@@ -46,7 +46,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | --- | --- | --- |
 | Postgres (CloudNativePG) | [RFC-0009](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0009-postgres-resource.md) | done (typed-name delete confirmation; storage used still missing) |
 | Redis and Valkey | [RFC-0010](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0010-redis-resource.md) | done (PodDisruptionBudget still missing) |
-| Postgres backups and point-in-time recovery | [RFC-0038](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0038-postgres-backups-and-pitr.md) | ready to implement |
+| Postgres backups and point-in-time recovery | [RFC-0038](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0038-postgres-backups-and-pitr.md) | done |
 | Postgres pooling, credential rotation, resize | [RFC-0039](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0039-postgres-pooling-rotation-resize.md) | ready to implement |
 | Redis high availability and metrics exporter | [RFC-0040](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0040-redis-ha-and-exporter.md) | proposal |
 | Resource detail pages with their own metrics | [RFC-0028](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0028-resource-pages-and-metrics.md) | proposal |

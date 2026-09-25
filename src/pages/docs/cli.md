@@ -87,8 +87,11 @@ description: Every shpyrd command and its flags.
 | `shpyrd volumes snapshots <volume>` | List the volume's snapshots (also `snapshot list`); `snapshot rm <volume> <snapshot> --yes` deletes one. |
 | `shpyrd volumes restore <volume> --from <snapshot> [--to <new-volume>]` | Restore a snapshot into a new volume, or in place (`--yes`: the mounting instances stop while the disk is replaced). |
 | `shpyrd object-storage list` | Buckets of the platform's object store with usage (extension object-storage). |
-| `shpyrd pg create <name> --project <p>` | Create a PostgreSQL database (extension `postgres`): `--version`, `--size`, `--storage`, `--instances`. |
+| `shpyrd pg create <name> --project <p>` | Create a PostgreSQL database (extension `postgres`): `--backups`/`--retention`/`--backup-schedule`, `--version`, `--size`, `--storage`, `--instances`. |
 | `shpyrd pg list\|info\|psql\|delete` | Manage databases; `psql <name> -- <args>` opens psql on the primary; delete is refused while attached (`--force`). |
+| `shpyrd pg backups enable\|disable\|list <name>` | Backups of a database (needs extension `object-storage`): continuous WAL archiving and a scheduled base backup (`--retention 14d`, `--schedule "0 2 * * *"`); list shows the base backups and the recovery window. |
+| `shpyrd pg backup <name>` | Take a base backup now. |
+| `shpyrd pg restore <name> --as <new> [--to <RFC 3339>]` | Restore into a new database at a point in time (latest when omitted); attach the app to it when ready. |
 | `shpyrd redis create <name> --project <p>` | Create a Valkey or Redis store (extension `redis`): `--engine`, `--version`, `--size`, `--persistent`, `--storage`. |
 | `shpyrd redis list\|info\|cli\|delete` | Manage stores; `cli <name> -- <args>` runs valkey-cli or redis-cli. |
 | `shpyrd attach <resource>` | Attach a database or store to the app as config vars (`--kind` when ambiguous, `--prefix`). A release. |
