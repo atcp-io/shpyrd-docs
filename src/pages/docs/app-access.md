@@ -1,0 +1,114 @@
+---
+title: Sign-in for your app
+description: Who may open an app is decided at the edge, before a request reaches it - visitors sign in, teams get the user role, and the app receives who they are in headers and a signed JWT. No sign-in code in the app.
+---
+
+New projects ask visitors to sign in. Only people with a role on the project get in, and every request the app receives says who they are — a header to read, or a JWT to verify. The app itself has no sign-in code, no user table, no sessions to manage; roles are the teams and grants you already have. {% .lead %}
+
+## Three access modes
+
+| Mode | Who opens the app | What the app receives |
+| --- | --- | --- |
+| **Sign-in required** (`authenticated`, the default for new projects) | People with a role on the project: teams or people with the `user` role, and its viewers, developers and admins. Everyone else is asked to sign in, or told which team the app is available to. | Identity on every request |
+| **Public** (`public`) | Anyone on the internet — a site, a landing page. Projects created before v0.5 are public. | Nothing |
+| **Public, signed-in visitors identified** (`identified`) | Anyone; people who happen to be signed in are identified. A site with a "Hi, Maria" corner. | Identity when there is one |
+
+```shell
+shpyrd projects create "Expenses"            # sign-in required
+shpyrd projects create "Landing page" --public
+shpyrd access --project expenses              # who may open it
+shpyrd access set public --project expenses   # anyone
+```
+
+The dashboard has the same switch on the project page (Access card); making an app public asks for confirmation, and a badge says "Anyone can open this app" while it is.
+
+## Who gets in
+
+Grant the `user` role to a team or a person; `viewer`, `developer` and `admin` open the app too (they already read its logs and configuration):
+
+```shell
+shpyrd teams create finance --member joao@example.com --group Finance   # or a group of your identity provider
+shpyrd members add expenses --team finance --role user
+shpyrd members add expenses --user pedro@example.com --role user
+```
+
+Someone signed in without a role sees a page saying "Expenses is available to the finance team" — with a link to sign in as someone else — instead of the app. Someone who is not signed in is taken to the platform's sign-in page and back to the app afterwards. People whose only roles are `user` see a **launcher** in the dashboard: tiles for the apps they can open, nothing else.
+
+## What the app receives
+
+Every request that reaches an app with sign-in required (or an identified visitor of an `identified` app) carries:
+
+```
+X-Shpyrd-User:   joao@example.com
+X-Shpyrd-Email:  joao@example.com
+X-Shpyrd-Name:   João Silva
+X-Shpyrd-Teams:  finance,everyone
+X-Shpyrd-Roles:  user
+Authorization:   Bearer eyJhbGciOiJFZERTQSIs...
+```
+
+The headers are set by the platform's edge on every request — whatever a client sends in them is replaced — and your app is reachable only through that edge (its network policy admits the ingress and nothing else from outside the project). Reading `X-Shpyrd-User` is enough for most internal apps:
+
+```python
+# Flask
+who = request.headers.get("X-Shpyrd-User", "anonymous")
+teams = request.headers.get("X-Shpyrd-Teams", "").split(",")
+if "finance" not in teams:
+    abort(403)
+```
+
+```js
+// Express
+const who = req.get("X-Shpyrd-User") ?? "anonymous";
+const teams = (req.get("X-Shpyrd-Teams") ?? "").split(",").filter(Boolean);
+```
+
+```go
+// Go
+who := r.Header.Get("X-Shpyrd-User")
+teams := strings.Split(r.Header.Get("X-Shpyrd-Teams"), ",")
+```
+
+### Verifying the JWT
+
+For apps that also accept calls from elsewhere, or that want proof rather than a header, the `Authorization` bearer is a JWT signed by the platform (EdDSA / Ed25519), five minutes long, with the key published at `https://shpyrd.<your domain>/.well-known/jwks.json`:
+
+```json
+{
+  "iss": "https://shpyrd.example.com",
+  "aud": "expenses",
+  "sub": "idn_01J...",
+  "email": "joao@example.com",
+  "name": "João Silva",
+  "ws": "default",
+  "project": "expenses",
+  "roles": ["user"],
+  "teams": ["finance", "everyone"],
+  "realm": "workspace",
+  "provider": "google",
+  "iat": 1790000000,
+  "exp": 1790000300
+}
+```
+
+Check `iss`, `aud` (your project's slug) and `exp` with any JWT library that supports EdDSA (`jose`, `PyJWT[crypto]`, `github.com/lestrrat-go/jwx`). `roles` holds the caller's role on this project and, for platform admins, their platform role; `teams` the teams they belong to.
+
+## Open as: seeing the app the way a team does
+
+Builders have no test users. On the project page, **Open as** opens the app in a new tab with a preview identity: your account, but the teams you chose (or none, or anonymous). The app sees a member of Finance; the token carries `"preview": true` and an `act` claim naming you, so an app can tell if it wants to. Previews are recorded in the project's audit trail.
+
+```shell
+shpyrd members list expenses       # what a team would get
+```
+
+## How it works
+
+- The app's Ingress carries ingress-nginx's `auth_request` annotations: every request is checked with the platform's server first (a subrequest, cached for a few seconds).
+- Signing in happens on the platform's host. The browser is sent there and comes back to the app's host with a one-time code, which becomes a cookie **for that app's host only** (`__Host-shpyrd_edge`). Your app never sees the dashboard's session cookie, and a cookie for one app opens nothing else.
+- Signing out of the dashboard ends every app cookie: each request checks that the session still exists.
+- A companion Ingress for `/.shpyrd/` on the app's host serves the sign-in bounce, the callback, the sign-out and the "available to team X" page; the path is reserved for the platform.
+- Operators reach apps with the admin token (`Authorization: Bearer <token>`); scripts and CI can too. Pasting the token on the sign-in page opens a browser session the same way accounts do.
+
+## Not yet
+
+Personal API tokens and OAuth for AI agents opening apps as a person, sign-in on custom domains (RFC-0034 domains work for public apps; sign-in on them follows), and disabling previews per project.

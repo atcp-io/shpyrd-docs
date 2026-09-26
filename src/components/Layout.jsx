@@ -31,6 +31,7 @@ export const navigation = [
       { title: 'Resources', href: '/docs/resources' },
       { title: 'Databases and caches', href: '/docs/databases' },
       { title: 'Domains and exposure', href: '/docs/domains' },
+      { title: 'Sign-in for your app', href: '/docs/app-access' },
       { title: 'Logs', href: '/docs/logs' },
       { title: 'Extensions and sign-in', href: '/docs/extensions' },
       { title: 'Teams, roles and security', href: '/docs/access' },
