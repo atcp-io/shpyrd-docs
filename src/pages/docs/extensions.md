@@ -81,16 +81,20 @@ shpyrd auth oidc remove okta
 
 Scopes default to `openid email profile groups`; `--scopes` replaces the extra ones (`-` for none). Group names are matched exactly as the provider sends them (Okta sends names, Microsoft Entra sends object ids): `shpyrd teams create platform --platform-role platform-admin --group "DevOps admin"`.
 
-### GitHub and Google
+### GitHub, Google, Microsoft and OpenID Connect through Dex
 
-Both go through Dex (the `auth-local` extension must be enabled) and are configured with one command that writes a Dex connector; Dex picks it up without a restart.
+All four go through Dex (the `auth-local` extension must be enabled) and are configured with one command — or from the dashboard's **Workspace › Sign-in** tab — that writes a Dex connector; the button appears on the sign-in page at once.
 
 ```shell
 shpyrd auth connector add github --client-id ... --client-secret "$GITHUB_CLIENT_SECRET" --org acme
 shpyrd auth connector add google --client-id ... --client-secret "$GOOGLE_CLIENT_SECRET" --hosted-domain acme.com
+shpyrd auth connector add microsoft --client-id ... --client-secret "$MS_CLIENT_SECRET" --tenant acme.com
+shpyrd auth connector add oidc --issuer https://acme.okta.com --client-id ... --client-secret "$OKTA_CLIENT_SECRET" --label Okta
 shpyrd auth connector list
 shpyrd auth connector remove github
 ```
+
+`--tenant` limits Microsoft sign-in to one Entra tenant (id or domain); without it any work or school account may sign in. The `oidc` connector takes any issuer (Okta, Keycloak, Auth0, Authelia) and asks for the `groups` scope, so the provider's groups map to teams.
 
 **At GitHub**: Settings › Developer settings › OAuth Apps › New OAuth App, with authorization callback URL `https://auth.<domain>/callback` (the command prints it). `--org` limits sign-in to members of one organisation and makes its teams available as groups named `org:team-slug` (`--group acme:platform` on a Team); without it, everyone with a GitHub account may sign in and all their teams come along. GitHub must have a verified email on the account.
 
@@ -99,3 +103,12 @@ shpyrd auth connector remove github
 {% callout title="Local cluster note" %}
 The kind cluster serves `auth.127.0.0.1.nip.io` with the development CA, so run `shpyrd cluster trust-ca` once or the server will not trust the issuer. On other hosts, `shpyrd cluster init --domain` decides the hostname.
 {% /callout %}
+
+## Who may join, and company domains
+
+Two workspace settings decide what happens when someone signs in (dashboard: **Workspace › Sign-in**):
+
+- **Who may join** — *anyone who can sign in* (the default: whoever passes one of the methods becomes a person of the workspace, with no roles until granted), *only accounts of a claimed domain* (new people join only through a verified company domain), or *only people already in a team* (an administrator lists their email in a team or grants them a role first). People who already signed in keep their access whatever the policy.
+- **Company domains** — claim `acme.com` by publishing the DNS TXT record the page shows (`_shpyrd-verify.acme.com`) and pressing *Verify*. Accounts of a verified domain count as the company's people; choose a sign-in method for the domain and `@acme.com` accounts can only come through it — nobody signs in as `ceo@acme.com` with a password they made up elsewhere.
+
+Every person who signs in belongs to the built-in **everyone** team (`shpyrd members add intranet --team everyone --role user` opens an app to the whole company), and the People tab of the Workspace page can **suspend** someone: their access ends at once, everywhere, until reactivated.

@@ -55,7 +55,7 @@ The **Cluster** page shows the environment profile, the running server version, 
 
 ## Workspace
 
-Every project, team and person belongs to the workspace — the open-source platform has one. The **Workspace** page (platform admins) shows its name (editable), the **People** who have signed in with the login method they used last, the **Teams** projects grant roles to, and, with `auth-local`, the **Accounts** it manages. The old `/teams` and `/users` links land on the matching tab.
+Every project, team and person belongs to the workspace — the open-source platform has one. The **Workspace** page (platform admins) shows its name (editable), the **People** who have signed in with the login method they used last, the **Teams** projects grant roles to, and, with `auth-local`, the **Accounts** it manages. The **Sign-in** tab manages the login methods (Google, Microsoft, GitHub, any OpenID Connect provider), who may join on first sign-in, and the company's claimed email domains; the People tab can suspend someone. The old `/teams` and `/users` links land on the matching tab.
 
 ## Access and the launcher
 

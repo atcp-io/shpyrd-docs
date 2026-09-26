@@ -19,7 +19,7 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | Global config vars for every project | [RFC-0016](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0016-global-config-vars.md) | done |
 | Project quotas | [RFC-0042](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0042-project-quotas.md) | ready to implement |
 | Cost visibility | [RFC-0048](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0048-cost-visibility.md) | ready to implement |
-| Workspaces: the workspace every project, team and person belongs to | [RFC-0033](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0033-workspaces.md) | in progress (control-plane database and the Workspace page in v0.4.0; sign-in at the edge, the `user` role, access modes and the launcher in v0.5.0) |
+| Workspaces: the workspace every project, team and person belongs to | [RFC-0033](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0033-workspaces.md) | in progress (control-plane database and the Workspace page in v0.4.0; sign-in at the edge, the `user` role, access modes and the launcher in v0.5.0; login methods, join policy, company domains, the everyone team and suspension in v0.6.0) |
 
 ## Deploying
 

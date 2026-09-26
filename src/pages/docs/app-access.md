@@ -32,6 +32,8 @@ shpyrd members add expenses --team finance --role user
 shpyrd members add expenses --user pedro@example.com --role user
 ```
 
+The built-in **everyone** team is every person who has signed in: `shpyrd members add expenses --team everyone --role user` opens the app to the whole company at once.
+
 Someone signed in without a role sees a page saying "Expenses is available to the finance team" — with a link to sign in as someone else — instead of the app. Someone who is not signed in is taken to the platform's sign-in page and back to the app afterwards. People whose only roles are `user` see a **launcher** in the dashboard: tiles for the apps they can open, nothing else.
 
 ## What the app receives
