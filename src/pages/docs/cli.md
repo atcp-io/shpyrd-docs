@@ -3,9 +3,21 @@ title: CLI reference
 description: Every shpyrd command and its flags.
 ---
 
-`shpyrd` uses your kubeconfig (`--kubeconfig`, `--context` on every command; `-v` for verbose output). Project commands take `--project <name>` or read `project:` from `shpyrd.yaml` in the current directory. Commands contributed by extensions (`shpyrd users`) explain themselves when the extension is not enabled. {% .lead %}
+Two binaries, one install: `shpyrd` for people who deploy and run projects, `shpyrd-ctl` for the operator who installs and runs the platform (the cluster, extensions, backups). `shpyrd` signs in to a workspace with `shpyrd login` and needs no kubeconfig for project commands; with a kubeconfig at hand (`--kubeconfig`, `--context`) it talks to the cluster directly, as `shpyrd-ctl` always does. Project commands take `--project <slug>` or read `project:` from `shpyrd.yaml` in the current directory; `-v` prints verbose output. Commands contributed by extensions (`shpyrd users`) explain themselves when the extension is not enabled. {% .lead %}
+
+## Signing in
+
+| Command | What it does |
+| --- | --- |
+| `shpyrd login --url <workspace> --token <token>` | Sign the CLI in to a workspace (`https://shpyrd.example.com`) and keep the credential in `~/.shpyrd/sessions.json`. The token is a personal API token (below) or, for the operator, the admin token from `shpyrd-ctl cluster token`. `SHPYRD_URL` and `SHPYRD_TOKEN` work without a saved session: set them in CI. A token the workspace rejects is not saved. |
+| `shpyrd whoami` | Who the saved credential is, checked against the workspace; fails when the token expired or was revoked. |
+| `shpyrd logout` | Forget the saved credential (`--url`). |
+| `shpyrd tokens create <name>` | Create an API token for CI or another machine: `--platform-role platform-viewer\|platform-admin` or `--project <slug> --role user\|viewer\|developer\|admin`, `--expires 90d`. The value is printed once. A token never carries more than you hold at the moment it is used, and a token cannot create tokens: run this signed in as yourself (or with the admin token), or use the dashboard's Workspace → API tokens tab. |
+| `shpyrd tokens list`, `tokens revoke <id>` | Your tokens with role, expiry and last use (platform admins see everyone's); revocation is immediate. |
 
 ## Cluster
+
+Operator commands. They live in `shpyrd-ctl` (installed alongside `shpyrd` by Homebrew and the release archives) and also answer as `shpyrd cluster …` when a kubeconfig is available.
 
 | Command | What it does |
 | --- | --- |
