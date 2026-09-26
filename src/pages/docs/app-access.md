@@ -49,7 +49,7 @@ X-Shpyrd-Roles:  user
 Authorization:   Bearer eyJhbGciOiJFZERTQSIs...
 ```
 
-The headers are set by the platform's edge on every request — whatever a client sends in them is replaced — and your app is reachable only through that edge (its network policy admits the ingress and nothing else from outside the project). Reading `X-Shpyrd-User` is enough for most internal apps:
+The headers are set by the platform's edge on every request — whatever a client sends in them is blanked at the front door, for public apps too (since v0.9.4), and replaced with the real values where sign-in is on — and your app is reachable only through that edge (its network policy admits the ingress and nothing else from outside the project). Reading `X-Shpyrd-User` is enough for most internal apps:
 
 ```python
 # Flask
