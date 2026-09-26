@@ -102,7 +102,7 @@ Local accounts of the `auth-local` extension: add, reset passwords, remove.
 ## Try it yourself
 
 ```shell
-shpyrd projects create shop && cd examples/shop && shpyrd deploy
+shpyrd projects create shop --public && cd examples/shop && shpyrd deploy   # a public shop; without --public visitors sign in
 shpyrd pg create db --project shop && shpyrd redis create cache --project shop
 shpyrd attach db && shpyrd attach cache
 shpyrd projects create blog && shpyrd volumes create data --size 1Gi --project blog && (cd ../blog && shpyrd deploy)

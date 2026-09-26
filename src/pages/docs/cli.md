@@ -28,7 +28,7 @@ description: Every shpyrd command and its flags.
 | `shpyrd users list`, `passwd <email>`, `rm <email>` | Manage local accounts. |
 | `shpyrd teams create <name>` | Create or update a team: `--member <email>`, `--group <idp group>`, `--platform-role platform-admin\|platform-viewer`, `--description`. |
 | `shpyrd teams list`, `add <team> <email...>`, `remove <team> <email...>`, `delete <team> --yes` | Manage teams (`--group` for identity provider groups). |
-| `shpyrd members add <project> --user <email>\|--team <name> --role viewer\|developer\|admin` | Grant a role on a project. |
+| `shpyrd members add <project> --user <email>\|--team <name> --role user\|viewer\|developer\|admin` | Grant a role on a project (`user` opens the app, see [Sign-in for your app](/docs/app-access)). |
 | `shpyrd members list [project]`, `remove <project> --user\|--team` | List and remove grants. |
 
 ## Log drains
@@ -61,7 +61,7 @@ description: Every shpyrd command and its flags.
 
 | Command | What it does |
 | --- | --- |
-| `shpyrd projects create "<name>"` | Create the project. The name is free text ("My Shop"); its **slug** (`my-shop`) is derived from it and identifies the project in `--project`, URLs and the hostname. `--slug` chooses it, `--domain` adds custom domains, `--save` writes `shpyrd.yaml`. (`shpyrd apps` still works as an alias.) |
+| `shpyrd projects create "<name>"` | Create the project. The name is free text ("My Shop"); its **slug** (`my-shop`) is derived from it and identifies the project in `--project`, URLs and the hostname. `--slug` chooses it, `--domain` adds custom domains, `--save` writes `shpyrd.yaml`. (`shpyrd apps` still works as an alias.) New projects ask visitors to sign in; `--public` makes a site anyone can open. |
 | `shpyrd projects rename <slug> "<name>"` | Change the display name. The slug never changes. |
 | `shpyrd projects list` | Table of projects: slug, name, phase, release, URL, age. |
 | `shpyrd projects info <slug>` | Phase and message, URL, build digest, source, processes (with sizes and failing reasons), recent releases, and every resource of the project (app, attached resources, volumes). |
@@ -106,6 +106,7 @@ description: Every shpyrd command and its flags.
 | `shpyrd domains add <host>` | Serve the project at a hostname you own; prints the DNS record to create (CNAME to the project hostname, or A to the front door) and waits until it serves (`--no-wait`). |
 | `shpyrd domains list`, `rm <host>` | Custom domains with DNS and certificate state; stop serving one. |
 | `shpyrd exposure internal\|external` | Which front door serves the project on cloud profiles (public or private load balancer). Release-free. |
+| `shpyrd access [set public\|authenticated\|identified]` | Who may open the app: sign-in required (the default), public, or public with signed-in visitors identified; without `set`, shows the mode and the roles that open it. |
 | `shpyrd open` | Open the project URL in the browser. |
 
 ## Where things are

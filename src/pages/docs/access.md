@@ -9,13 +9,14 @@ Identity says who you are; roles say what you may do. Projects grant roles to us
 
 | Role | Sees | Does |
 | --- | --- | --- |
-| `viewer` | overview, releases, builds, logs, metrics, config var **names** | nothing |
+| `user` | the app itself (through the edge), the launcher | opens the app; nothing in the builder dashboard — see [Sign-in for your app](/docs/app-access) |
+| `viewer` | overview, releases, builds, logs, metrics, config var **names**; opens the app | nothing |
 | `developer` | everything a viewer sees | deploy, roll back, scale, resize, set and unset config vars, shell and one-off commands |
 | `admin` | + members, resources | attach and detach resources, create volumes, manage members, destroy the project |
 | `platform-admin` | everything, cluster page, extensions, teams, users | everything |
 | `platform-viewer` | everything, read-only | nothing |
 
-The first three are granted **per project**, to a user (by email) or to a **team**. The platform roles are carried by teams. A refusal is a plain sentence: *your role on project shop is developer: it cannot destroy the project*.
+The first four are granted **per project**, to a user (by email) or to a **team**; every operating role opens the app too. The platform roles are carried by teams. A refusal is a plain sentence: *your role on project shop is developer: it cannot destroy the project*.
 
 ## Teams and members
 

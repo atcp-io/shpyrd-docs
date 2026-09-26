@@ -56,3 +56,9 @@ The **Cluster** page shows the environment profile, the running server version, 
 ## Workspace
 
 Every project, team and person belongs to the workspace — the open-source platform has one. The **Workspace** page (platform admins) shows its name (editable), the **People** who have signed in with the login method they used last, the **Teams** projects grant roles to, and, with `auth-local`, the **Accounts** it manages. The old `/teams` and `/users` links land on the matching tab.
+
+## Access and the launcher
+
+The project page's **Access** card says who may open the app — sign-in required, public, or public with signed-in visitors identified — and lets project admins change it (making an app public asks for confirmation). **Open as** opens the app in a new tab as a team of your choice, or anonymous, so builders see what their users see. The **Roles** card grants `user`, `viewer`, `developer` and `admin` to people and teams.
+
+People whose only roles are `user` land on the **launcher** instead of the projects list: tiles for the apps they may open (public apps included), nothing else. See [Sign-in for your app](/docs/app-access).

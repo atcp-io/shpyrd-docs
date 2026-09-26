@@ -14,6 +14,8 @@ shpyrd projects create "My Service" --save # also writes shpyrd.yaml (project: m
 
 Names are lowercase letters, digits and dashes (max 40 characters) and become the hostname: `https://my-service.<domain>`.
 
+A new project asks its visitors to sign in: only people with a role on it can open the app, and the app receives who they are. For a site anyone may open, create it with `--public` or switch later with `shpyrd access set public`. See [Sign-in for your app](/docs/app-access).
+
 ## Deploy
 
 From inside your repository:
