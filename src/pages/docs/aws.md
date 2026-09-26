@@ -119,7 +119,7 @@ What happens, in order:
 | rc0 | Prometheus Operator CRDs |
 | rc1 | the AWS Load Balancer Controller, cert-manager (with ambient credentials for Route 53), the registry credential, the snapshot controller and the EBS snapshot class, the `gp3` and `shpyrd-efs` storage classes |
 | rc2 | Let's Encrypt issuers, the platform CA and trust bundle, ingress-nginx behind an internet-facing NLB on the Elastic IPs and the internal one behind an internal NLB (both with pod targets), the registry and the node trust for it, ExternalDNS |
-| rc3 | kpack with the Paketo builder, kube-prometheus-stack, the wildcard certificate |
+| rc3 | kpack with the Paketo builder, kube-prometheus-stack, the wildcard certificate, the control-plane database |
 | rc4 | the shpyrd server |
 
 The installer waits for the load balancer hostname, for `shpyrd.<domain>` to resolve on public resolvers and for the certificates. The summary at the end:

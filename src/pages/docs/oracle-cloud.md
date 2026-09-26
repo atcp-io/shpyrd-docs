@@ -123,7 +123,7 @@ What happens, in order:
 | rc0 | Prometheus Operator CRDs |
 | rc1 | Calico (policy only), cert-manager, the registry credential |
 | rc2 | Let's Encrypt issuers, the platform CA (generated in the cluster) and trust bundle, ingress-nginx (public load balancer on the reserved address) and, with a subnet, the internal one, the registry and the node trust for it, ExternalDNS and the OCI DNS-01 solver |
-| rc3 | kpack with the Paketo builder (pushed to the in-cluster registry), kube-prometheus-stack, the wildcard certificate |
+| rc3 | kpack with the Paketo builder (pushed to the in-cluster registry), kube-prometheus-stack, the wildcard certificate, the control-plane database |
 | rc4 | the shpyrd server |
 
 The installer waits for the load balancer address, for `shpyrd.<domain>` to resolve on public resolvers, and for the certificates. Twenty minutes on a fresh cluster, most of it downloads and Let's Encrypt. The summary at the end:

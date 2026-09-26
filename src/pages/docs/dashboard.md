@@ -7,7 +7,7 @@ The dashboard is served by the shpyrd server inside the cluster at `https://shpy
 
 ## Signing in
 
-`shpyrd cluster dashboard` opens the dashboard signed in with the admin token; the login page also accepts the token pasted by hand (`shpyrd cluster token`). With the `auth-local` extension enabled, the login page asks for the email and password of accounts created with `shpyrd users add` or on the **Users** page; the header shows who is signed in and has a sign-out entry. See [Extensions and sign-in](/docs/extensions).
+`shpyrd cluster dashboard` opens the dashboard signed in with the admin token; the login page also accepts the token pasted by hand (`shpyrd cluster token`). With the `auth-local` extension enabled, the login page asks for the email and password of accounts created with `shpyrd users add` or on the **Workspace** page (Accounts tab); the header shows who is signed in and has a sign-out entry. See [Extensions and sign-in](/docs/extensions).
 
 ## Projects
 
@@ -52,3 +52,7 @@ The **Cluster** page shows the environment profile, the running server version, 
 - Config var values are write-only through the API and the UI.
 - Image references and internal addresses are not exposed on project pages; builds and releases are identified by digest. The registry's address appears on the cluster page only, for platform admins.
 - On the local profile the dashboard is only reachable from your machine.
+
+## Workspace
+
+Every project, team and person belongs to the workspace — the open-source platform has one. The **Workspace** page (platform admins) shows its name (editable), the **People** who have signed in with the login method they used last, the **Teams** projects grant roles to, and, with `auth-local`, the **Accounts** it manages. The old `/teams` and `/users` links land on the matching tab.
