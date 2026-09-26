@@ -49,7 +49,7 @@ X-Shpyrd-Roles:  user
 Authorization:   Bearer eyJhbGciOiJFZERTQSIs...
 ```
 
-The headers are set by the platform's edge on every request — whatever a client sends in them is replaced — and your app is reachable only through that edge (its network policy admits the ingress and nothing else from outside the project). Reading `X-Shpyrd-User` is enough for most internal apps:
+The headers are set by the platform's edge on every request — whatever a client sends in them is blanked at the front door, for public apps too (since v0.9.4), and replaced with the real values where sign-in is on — and your app is reachable only through that edge (its network policy admits the ingress and nothing else from outside the project). Reading `X-Shpyrd-User` is enough for most internal apps:
 
 ```python
 # Flask
@@ -94,6 +94,16 @@ For apps that also accept calls from elsewhere, or that want proof rather than a
 ```
 
 Check `iss`, `aud` (your project's slug) and `exp` with any JWT library that supports EdDSA (`jose`, `PyJWT[crypto]`, `github.com/lestrrat-go/jwx`). `roles` holds the caller's role on this project and, for platform admins, their platform role; `teams` the teams they belong to.
+
+The keys live at **`<iss>/.well-known/jwks.json`** — the issuer is the dashboard URL of the workspace the app belongs to, so the same code works wherever the app runs. Every process is told what to expect through the environment (since v0.9.4):
+
+| Variable | Example | Use |
+| --- | --- | --- |
+| `SHPYRD_ISSUER` | `https://shpyrd.example.com` | the expected `iss`; fetch the JWKS at `$SHPYRD_ISSUER/.well-known/jwks.json` |
+| `SHPYRD_PROJECT` | `expenses` | the expected `aud` |
+| `SHPYRD_WORKSPACE` | `default` | the expected `ws` |
+
+The [`examples/hello`](https://github.com/shpyrd-io/shpyrd/tree/main/examples/hello) app verifies the token with nothing but the Go standard library (`cmd/web/jwt.go`: fetch the JWKS, cache it, check the Ed25519 signature by `kid`, then `iss`, `aud` and `exp`), and its page says whether the visitor was verified or merely read from the headers.
 
 ## Open as: seeing the app the way a team does
 
