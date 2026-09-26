@@ -20,6 +20,8 @@ Shpyrd is two binaries and a set of well-known open source components. The CLI i
 | **shpyrd-server** | API for the CLI upload and the dashboard, the `App` controller, source archive store, embedded UI |
 | **shpyrd** CLI | cluster bootstrap and every project operation |
 
+**Control-plane database.** Teams, project grants, the workspace and the people it has seen sign in live in PostgreSQL, not in Kubernetes objects: the `control-plane-db` component runs a single instance with a persistent volume (`SHPYRD_CONTROL_PLANE_DB_SIZE`), or `SHPYRD_DATABASE_URL` names a managed database and the component is skipped. Workloads (App, Volume, Postgres, Redis, LogDrain, ObjectBucket) stay custom resources reconciled by controllers. The server migrates the schema at start and imports the `Team`/`ProjectMember` objects of older installs once.
+
 ## The installer
 
 `shpyrd cluster init` applies a **profile**: an ordered list of **components**, each a Helm chart (installed with the Helm SDK, values embedded in the binary), a Kustomize tree (rendered in-process and applied with server-side apply), or both, plus **readiness conditions**: Deployments available, CRDs established, an admission webhook accepting a dry-run request, a status condition true for the current generation.
