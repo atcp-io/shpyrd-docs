@@ -79,8 +79,8 @@ Every line of the roadmap is an RFC in the [shpyrd repository](https://github.co
 | Account lifecycle: invitations, reset, verification, lockout | [RFC-0014](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0014-account-lifecycle.md) | proposal |
 | MFA and passkeys | [RFC-0053](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0053-mfa-and-passkeys.md) | ready to implement |
 | Grafana behind shpyrd sign-in | [RFC-0015](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0015-grafana-sign-in.md) | proposal |
-| Per-user API tokens | [RFC-0031](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0031-api-tokens.md) | ready to implement |
-| API-first CLI and `shpyrd login` | [RFC-0052](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0052-api-first-cli-and-login.md) | ready to implement |
+| Per-user API tokens | [RFC-0031](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0031-api-tokens.md) | done (v0.9.0) |
+| API-first CLI and `shpyrd login` | [RFC-0052](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0052-api-first-cli-and-login.md) | done (v0.8.0: `shpyrd login`, `shpyrd-ctl`, API transport for the first project commands; the rest of the project commands still go through the kubeconfig) |
 | MCP connector for AI agents | [RFC-0032](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0032-mcp-connector.md) | proposal |
 | Supply chain and encryption at rest | [RFC-0044](https://github.com/shpyrd-io/shpyrd/blob/main/rfcs/0044-supply-chain.md) | ready to implement |
 

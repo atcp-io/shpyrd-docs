@@ -67,6 +67,12 @@ The token created at install time is a shared credential with full platform-admi
 - `shpyrd cluster token --disable` switches it off once accounts exist and a `platform-admin` team has members: the API then refuses the token and everyone signs in with an account. `--enable` turns it back on.
 - Wrong tokens are audited and throttled per client (20 attempts a minute, after which even the right token waits).
 
+## API tokens
+
+For CI, scripts and other machines, people create their own **API tokens** instead of sharing the admin token: Workspace → **API tokens** in the dashboard, or `shpyrd tokens create ci --project shop --role developer --expires 90d`. A token is `shp_<id>_<random>`, shown once and stored hashed. It carries a platform role or a role on one project, never above what its owner holds: the check runs when the token is *used*, so a demoted owner's token is demoted with them and a suspended owner's tokens stop working at once. Expiry is optional and recommended; revocation (`shpyrd tokens revoke <id>`, or the trash icon) is immediate. A token cannot create tokens.
+
+Use it with `shpyrd login --url https://shpyrd.example.com --token shp_...` on a laptop, or `SHPYRD_URL` and `SHPYRD_TOKEN` in CI. The audit trail names both the person and the token (`ana@example.com (token ci)`).
+
 ## Audit trail
 
 Every mutation is recorded as `{who, what, target, detail, when, from, via}`: deploys, rollbacks, scaling and resizing, config var changes (names, never values), shells and one-off commands, volume and membership changes, project creation and destruction, from the dashboard and API (`via: api`, with the signed-in user) and from the CLI (`via: cli`, with the local user and host). The project page shows the recent actions; `GET /api/projects/{slug}/audit` returns them. Entries are Kubernetes Events, kept for the API server's event TTL (an hour by default) until durable storage arrives.
