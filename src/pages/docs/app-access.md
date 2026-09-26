@@ -95,6 +95,16 @@ For apps that also accept calls from elsewhere, or that want proof rather than a
 
 Check `iss`, `aud` (your project's slug) and `exp` with any JWT library that supports EdDSA (`jose`, `PyJWT[crypto]`, `github.com/lestrrat-go/jwx`). `roles` holds the caller's role on this project and, for platform admins, their platform role; `teams` the teams they belong to.
 
+The keys live at **`<iss>/.well-known/jwks.json`** — the issuer is the dashboard URL of the workspace the app belongs to, so the same code works wherever the app runs. Every process is told what to expect through the environment (since v0.9.4):
+
+| Variable | Example | Use |
+| --- | --- | --- |
+| `SHPYRD_ISSUER` | `https://shpyrd.example.com` | the expected `iss`; fetch the JWKS at `$SHPYRD_ISSUER/.well-known/jwks.json` |
+| `SHPYRD_PROJECT` | `expenses` | the expected `aud` |
+| `SHPYRD_WORKSPACE` | `default` | the expected `ws` |
+
+The [`examples/hello`](https://github.com/shpyrd-io/shpyrd/tree/main/examples/hello) app verifies the token with nothing but the Go standard library (`cmd/web/jwt.go`: fetch the JWKS, cache it, check the Ed25519 signature by `kid`, then `iss`, `aud` and `exp`), and its page says whether the visitor was verified or merely read from the headers.
+
 ## Open as: seeing the app the way a team does
 
 Builders have no test users. On the project page, **Open as** opens the app in a new tab with a preview identity: your account, but the teams you chose (or none, or anonymous). The app sees a member of Finance; the token carries `"preview": true` and an `act` claim naming you, so an app can tell if it wants to. Previews are recorded in the project's audit trail.
