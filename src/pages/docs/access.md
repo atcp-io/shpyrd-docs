@@ -32,13 +32,17 @@ shpyrd members list shop
 shpyrd members remove shop --user guest@example.com
 ```
 
-Team `groups` are names from your identity provider's groups claim: a company directory group maps to a team without listing people twice. The dashboard has the same operations: the **Workspace** page (Teams tab) for platform admins and a **Members** card on every project for its admins.
+Team `groups` are names from your identity provider's groups claim: a company directory group maps to a team without listing people twice. The built-in team **everyone** holds every person who has signed in — grant it the `user` role and the whole company can open an app (`shpyrd members add intranet --team everyone --role user`); it cannot be edited or deleted, and kubectl bindings skip it. The dashboard has the same operations: the **Workspace** page (Teams tab) for platform admins and a **Members** card on every project for its admins.
 
 Teams and grants live in the platform's **control-plane database** (a small PostgreSQL the base stack runs as `control-plane-db`, or the managed database named by `SHPYRD_DATABASE_URL`), together with the workspace's record of who has signed in (the Workspace page, People tab). Installs made before v0.4 kept them as Kubernetes objects (`Team`, `ProjectMember`); the first server start after the upgrade copies them into the database and marks the objects migrated — nothing to do by hand. The platform backup carries the database's content (`shpyrd cluster backups`).
 
 {% callout title="Before the first team" %}
 A fresh cluster has no teams or members, and every signed-in user is a platform admin so nothing is locked. Creating the first team or member switches enforcement on; the CLI says so, and the dashboard shows a notice until then. Put yourself in a `platform-admin` team first. The admin token is always a platform admin.
 {% /callout %}
+
+## Suspending someone
+
+The People tab of the Workspace page (or `PATCH /api/workspace/people/<email>` with `{"status":"suspended"}`) switches a person off at once: no role anywhere, no app opens, sign-in refused — until reactivated. Removing them from the identity provider does the same at the session's end; suspension is for right now.
 
 ## Kubernetes RBAC mirror
 

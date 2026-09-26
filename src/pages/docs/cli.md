@@ -54,7 +54,7 @@ description: Every shpyrd command and its flags.
 | `shpyrd auth oidc set --id <id> --label <text> --issuer <url> --client-id <id> --client-secret <secret\|@file>` | Add or update a company identity provider (extension `auth-oidc`); `--scopes` replaces the extra scopes (`-` for none). Prints the redirect URIs to register. |
 | `shpyrd auth oidc list` / `remove <id>` | List or remove providers (roles are kept, they are keyed by email). |
 | `shpyrd auth oidc check <id\|issuer-url>` | Fetch the issuer's discovery document: endpoints, PKCE, scopes, claims, sign-out support. |
-| `shpyrd auth connector add github\|google --client-id ... --client-secret ... [--org] [--hosted-domain]` | GitHub or Google sign-in through the bundled issuer (extension `auth-local`). |
+| `shpyrd auth connector add github\|google\|microsoft\|oidc --client-id ... --client-secret ... [--org] [--hosted-domain] [--tenant] [--issuer]` | A sign-in method through the bundled issuer (extension `auth-local`): GitHub, Google, Microsoft or any OpenID Connect provider; the button appears at once. Also on the dashboard's Workspace › Sign-in tab. |
 | `shpyrd auth connector list` / `remove <id>` | List or remove connectors. |
 
 ## Projects
